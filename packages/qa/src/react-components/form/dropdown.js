@@ -74,27 +74,27 @@ const DropdownInput = styled.div`
         border-color: #04295e transparent transparent transparent;
       }
   `
-export default function Dropdown(props) {
+const mockOptionList =  ['選項一','選項二','選項三','選項四'] 
+export default function Dropdown({optionList = mockOptionList }) {
   const inputRef = useRef(null);
+  const [option, setOption] = useState('');
+  const [isListOpen, setIsListOpen] = useState(false)
+
   const focusInput = () => {
     inputRef.current.focus();
     inputRef.current.style.borderColor = "#04295e"
   };
 
-  const [option, setOption] = useState('');
-  const [isListOpen, setIsListOpen] = useState(false)
-  const mockOptionList = ['沒有症狀','輕症','重症','我無法判斷']
-
-  const openList = () => {
-    setIsListOpen(!isListOpen)
+  const toggleList = () => {
+    setIsListOpen((isListOpen)=>!isListOpen)
     focusInput()
   }
   const chooseOption  = (option)=>{
     setOption(option)
-    openList()
+    toggleList()
   }
 
-  const optionList = mockOptionList.map((item,index) =>
+  const optionItem = optionList.map((item,index) =>
     <DropdownOption onClick={() => chooseOption(item)} key={index}>
       {item}
     </DropdownOption>);
@@ -103,13 +103,13 @@ export default function Dropdown(props) {
   return (
     <div>
       <DropdownWrapper>
-        <DropdownInput ref={inputRef} onClick={openList}>
+        <DropdownInput ref={inputRef} onClick={toggleList}>
           <input readOnly placeholder='請選擇' defaultValue={option} />
-          <span className='arrow' onClick={openList}></span>
+          <span className='arrow'></span>
         </DropdownInput>        
         {isListOpen &&
         <DropdownOptionList>
-          {optionList}
+          {optionItem}
         </DropdownOptionList>
         }
       </DropdownWrapper>
