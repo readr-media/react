@@ -1,8 +1,8 @@
 import React from "react";
 import styled from "styled-components";
 import { Editor, EditorState, convertFromRaw } from "draft-js";
-import decorators from "../../libs/draft-js/entity-decorator";
-import { atomicBlockRenderer } from "../../libs/draft-js/block-redender-fn";
+import decorators from "../draft/entity-decorator";
+import { atomicBlockRenderer } from "../draft/block-redender-fn";
 
 const blockRendererFn = (block) => {
   const atomicBlockObj = atomicBlockRenderer(block);
