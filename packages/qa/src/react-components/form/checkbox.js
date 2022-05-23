@@ -1,20 +1,17 @@
 import React from 'react'
 import styled from 'styled-components'
 
-
-const CheckboxOptionList = styled.ul`
-    position: relative;
-    margin: 0; 
-    padding: 4px 0;
-        max-height: 240px;
-        overflow-y: auto;
-        overflow-y: auto;
-       
-
+const Title = styled.h3`
+  padding: 16px 0;
+  line-height: 200%;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 150%;
+  box-sizing: border-box;
+  font-family: 'Noto Sans CJK TC', sans-serif;
+  width: 320px;
+  margin:0;
 `
-
-
-
 
 const CheckboxWrapper = styled.section`
     * {
@@ -31,16 +28,20 @@ const CheckboxWrapper = styled.section`
     border-radius: 6px;
     border: 1px solid;
     width: 320px;
-    margin: 0 auto;
     display: flex;
     flex-direction: column;
     padding: 16px 24px 20px;
-
-    h3{
-      margin: 0;
-      line-height: 200%;
-    }
+    margin: 0 0 24px;
   `
+  
+const CheckboxOptionList = styled.ul`
+    position: relative;
+    margin: 0; 
+    padding: 4px 0;
+    max-height: 240px;
+    overflow-y: auto;       
+`
+
 
 const CheckboxOption = styled.li`
   color: #000928;
@@ -103,13 +104,16 @@ const CheckboxOption = styled.li`
 `
 
 const defaultTitle = '這是複選題'
-const mockOptionList = ['選項一', '選項二', '選項三']
 
-export default function Checkbox({ title = defaultTitle, optionList = mockOptionList }) {
-  const optionItem = optionList.map((item, index) =>
-    <CheckboxOption onClick={() => chooseOption(item)} key={index}>
-      <label className='container' htmlFor={index}>{item}
-        <input type="checkbox" id={index} value={item}  defaultChecked='checked' />
+export default function Checkbox({ title = defaultTitle, ...props }) {
+  const optionItem = props.options.map((option) =>
+    <CheckboxOption key={`option-${option.id}`}>
+      <label
+        className='container'
+        htmlFor={`option-${option.id}`}
+        onChange={(e => props.onChange(e.target.value))}
+      >{option.name}
+        <input type="checkbox" id={`option-${option.id}`} value={option.value} />
         <span className="checkmark"></span>
       </label>
 
@@ -117,14 +121,13 @@ export default function Checkbox({ title = defaultTitle, optionList = mockOption
     </CheckboxOption>);
 
   return (
-    <div>
-
+    <React.Fragment>
       <CheckboxWrapper>
-        <h3>{title}</h3>
+        <Title>{title}</Title>
         <CheckboxOptionList>
           {optionItem}
         </CheckboxOptionList>
       </CheckboxWrapper>
-    </div>
+    </React.Fragment>
   )
 }
