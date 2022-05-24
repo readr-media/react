@@ -20,7 +20,6 @@ const SubmitBt = styled.div`
  */
 export default function Question(props) {
   const [answer, setAnswer] = useState([])
-
   let optionsJsx = null
   switch (props.type) {
     // TODO: check what's difference between multiple and checkbox with HC.
@@ -30,8 +29,9 @@ export default function Question(props) {
       optionsJsx = (
         <Checkbox 
           title={props.name}
-          options={props.options} 
-          onChange={(value) => {setAnswer([value])}}
+          options={props.options}
+          checkedValue={answer}
+          onChange={(value) => {setAnswer(value)}}
         />
       )
         

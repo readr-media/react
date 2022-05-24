@@ -1,4 +1,4 @@
-import React from 'react'
+import React  from 'react'
 import styled from 'styled-components'
 
 const Title = styled.h3`
@@ -33,7 +33,7 @@ const CheckboxWrapper = styled.section`
     padding: 16px 24px 20px;
     margin: 0 0 24px;
   `
-  
+
 const CheckboxOptionList = styled.ul`
     position: relative;
     margin: 0; 
@@ -105,13 +105,21 @@ const CheckboxOption = styled.li`
 
 const defaultTitle = '這是複選題'
 
-export default function Checkbox({ title = defaultTitle, ...props }) {
+export default function Checkbox({ title = defaultTitle, checkedValue = [], ...props }) {
+  const chooseOption = (option) => {
+    if(checkedValue.indexOf(option)> -1){
+      props.onChange(checkedValue.filter((item)=> item !== option))
+    }else{
+      props.onChange(checkedValue.concat(option))
+    }
+
+  }
   const optionItem = props.options.map((option) =>
     <CheckboxOption key={`option-${option.id}`}>
       <label
         className='container'
         htmlFor={`option-${option.id}`}
-        onChange={(e => props.onChange(e.target.value))}
+        onChange={(e => chooseOption(e.target.value))}
       >{option.name}
         <input type="checkbox" id={`option-${option.id}`} value={option.value} />
         <span className="checkmark"></span>
