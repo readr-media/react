@@ -1,6 +1,8 @@
 import React  from 'react'
 import styled from 'styled-components'
 
+
+
 const Title = styled.h3`
   padding: 16px 0;
   line-height: 200%;
@@ -104,6 +106,15 @@ const CheckboxOption = styled.li`
 `
 
 const defaultTitle = '這是複選題'
+
+/**
+ *  @param {Object} props
+ *  @param {import('../typedef').Option[]} props.options
+ *  @param {string} props.title
+ *  @param {string[]} props.checkedValue
+ *  @param {Function} props.onChange
+ *  @return React.ReactElement
+ */
 
 export default function Checkbox({ title = defaultTitle, checkedValue = [], ...props }) {
   const chooseOption = (option) => {

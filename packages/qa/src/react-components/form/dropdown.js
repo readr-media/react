@@ -1,6 +1,8 @@
 import React, { useState, useRef } from 'react'
 import styled from 'styled-components'
 
+
+
 const Title =styled.h3`
   padding: 16px 0;
   line-height: 200%;
@@ -87,6 +89,18 @@ const DropdownInput = styled.div`
       }
   `
 const defaultTitle = '這是選項>=4的單選題'
+
+
+/**
+ *  @param {Object} props
+ *  @param {import('../typedef').Option[]} props.options
+ *  @param {string} props.title
+ *  @param {string} props.checkedValue
+ *  @param {Function} props.onChange
+ *  @return React.ReactElement
+ */
+
+
 export default function Dropdown({title=defaultTitle,...props}) {
   const inputRef = useRef(null);
   const [isListOpen, setIsListOpen] = useState(false)
