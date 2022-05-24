@@ -6,7 +6,12 @@ import CommentForm from './comment-form/CommentForm'
 import useRecaptcha from '../hooks/useRecaptcha'
 import Comments from './comments/Comments'
 
-export default function Feedback() {
+import { formsData } from './mock-forms'
+
+
+export default function Feedback({ data = formsData }) {
+  const commentFormData = data.forms.find(form => form.slug === 'feedback-comment')
+  const thumbsFormData = data.forms.find(form => form.slug === 'feedback-like')
   const { verified } = useRecaptcha()
 
   const commentFormSubmitHandler = (textareaValue) => {
@@ -22,8 +27,8 @@ export default function Feedback() {
   return (
     <>
       <Section>
-        <ThumbsForm onSubmit={thumbsFormSubmitHandler} />
-        {verified && <CommentForm onSubmit={commentFormSubmitHandler} />}
+        {thumbsFormData.active && <ThumbsForm onSubmit={thumbsFormSubmitHandler} thumbsFields={thumbsFormData.fields} />}
+        {commentFormData.active && verified && <CommentForm onSubmit={commentFormSubmitHandler} commentFields={commentFormData.fields} />}
       </Section>
       <Section>
         <Comments />

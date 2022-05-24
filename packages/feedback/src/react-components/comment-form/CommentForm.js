@@ -3,7 +3,9 @@ import styled from 'styled-components';
 
 import Textarea from './Texarea'
 
-const Form = styled.form`
+const Form = styled.form``
+
+const Field = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -43,7 +45,7 @@ const Button = styled.button`
 `
 
 
-export default function TextareaForm({ onSubmit }) {
+export default function TextareaForm({ onSubmit, commentFields }) {
   const [enableSumbit, setEnableSubmit] = useState(false)
   const [textareaValue, setTextareaValue] = useState('')
 
@@ -68,10 +70,14 @@ export default function TextareaForm({ onSubmit }) {
   }
   return (
     <Form onSubmit={submitHandler}>
-      <Textarea textAreaValue={textareaValue} onChange={textareaChangedHandler} />
-      <ButtonWrapper>
-        <Button disabled={!enableSumbit}>送出</Button>
-      </ButtonWrapper>
+      {commentFields.map(commentField => (
+        <Field key={commentField.id}>
+          <Textarea textAreaValue={textareaValue} onChange={textareaChangedHandler} placeholder={commentField.name} />
+          <ButtonWrapper>
+            <Button disabled={!enableSumbit}>送出</Button>
+          </ButtonWrapper>
+        </Field>
+      ))}
     </Form>
   )
 }

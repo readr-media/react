@@ -3,7 +3,9 @@ import styled from 'styled-components';
 
 import ThumbField from './ThumbField';
 
-const Form = styled.form`
+const Form = styled.form``
+
+const Field = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -21,7 +23,7 @@ const ThumbWrapper = styled.div`
 `
 
 
-export default function ThumbsForm({ onSubmit }) {
+export default function ThumbsForm({ onSubmit, thumbsFields }) {
   const [thumbUpChecked, setThumbUpChecked] = useState(false)
   const [thumbDownChecked, setThumbDownChecked] = useState(false)
   const [thumbUpPressing, setThumbUpPressing] = useState(false)
@@ -98,11 +100,19 @@ export default function ThumbsForm({ onSubmit }) {
   }
 
 
-  return <Form>
-    <Title>這個結果符合實際情況嗎?</Title>
-    <ThumbWrapper>
-      <ThumbField {...thumbUpProps} />
-      <ThumbField {...thumbDownProps} />
-    </ThumbWrapper>
-  </Form>
+  return (<>
+    <Form>
+      {
+        thumbsFields.map(thumbsField => (
+          <Field key={Math.random()}>
+            <Title>{thumbsField.name}</Title>
+            <ThumbWrapper>
+              <ThumbField {...thumbUpProps} />
+              <ThumbField {...thumbDownProps} />
+            </ThumbWrapper>
+          </Field>
+        ))
+      }
+    </Form>
+  </>)
 }
