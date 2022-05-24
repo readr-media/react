@@ -87,7 +87,6 @@ const DropdownInput = styled.div`
       }
   `
 const defaultTitle = '這是選項>=4的單選題'
-const mockOptionList =  ['選項一','選項二','選項三','選項四'] 
 export default function Dropdown({title=defaultTitle,...props}) {
   const inputRef = useRef(null);
   const [isListOpen, setIsListOpen] = useState(false)
@@ -105,7 +104,7 @@ export default function Dropdown({title=defaultTitle,...props}) {
     props.onChange(option)
   }
   const optionItem = props.options.map((option) =>
-    <DropdownOption onClick={() => chooseOption(option.name)} key={`option-${option.id}`}>
+    <DropdownOption onClick={() => chooseOption(option.value)} key={`option-${option.id}`}>
       {option.name}
     </DropdownOption>);
 
