@@ -26,7 +26,7 @@ const ButtonWrapper = styled.button`
       `}
 `;
 
-export default function Button({ title, onClick, disabled }) {
+export default function Button({ title, onClick, disabled = false }) {
   function handleOnClick(e) {
     if (!disabled) onClick(e);
   }
