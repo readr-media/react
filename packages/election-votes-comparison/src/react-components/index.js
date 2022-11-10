@@ -146,7 +146,10 @@ const Container = styled.div`
     box-sizing: border-box;
   }
 
-  background-color: #fff8f3;
+  background-color: ${({ theme }) =>
+    theme?.container?.backgroundColor
+      ? theme?.container?.backgroundColor
+      : '#fff8f3'};
   padding-bottom: 60px;
 
   ${StyledList} {
@@ -172,6 +175,7 @@ const Container = styled.div`
 `
 
 const Header = styled.header`
+  display: ${({ shouldHideHeader }) => shouldHideHeader && 'none'};
   ${(props) => {
     const baseCss = `
       border-top: 4px solid black;
@@ -263,7 +267,7 @@ const Header = styled.header`
  *  @param {string} props.title
  *  @param {District[]} [props.districts=[]]
  *  @param {'rwd'|'mobile'} props.device
- *  @param {'openRelations'|'electionModule'} props.theme
+ *  @param {'openRelations'|'electionModule'|'mnewsElection2022'} props.theme
  *  @param {string} [props.scrollTo] - the first row with the district name to scroll to
  *  @returns {React.ReactElement}
  */
@@ -369,7 +373,7 @@ export function CouncilMember({
   return (
     <ThemeProvider theme={Object.assign({ device }, themeObj[theme])}>
       <Container className={className}>
-        <Header>
+        <Header shouldHideHeader={theme === 'mnewsElection2022'}>
           <h3>{year}</h3>
           <h3>{title}</h3>
         </Header>
@@ -380,7 +384,11 @@ export function CouncilMember({
           onSelect={(n) => setDistrictName(n)}
           renderFullOption={(option) => `第${option}選舉區`}
         />
-        <StyledList dataManager={dataManager} scrollTo={districtName} />
+        <StyledList
+          themeName={theme}
+          dataManager={dataManager}
+          scrollTo={districtName}
+        />
       </Container>
     </ThemeProvider>
   )
@@ -391,7 +399,7 @@ export function CouncilMember({
  *  @param {string} [props.className]
  *  @param {Election} props.election
  *  @param {'mobile'|'rwd'} props.device
- *  @param {'openRelations'|'electionModule'} [props.theme='openRelations']
+ *  @param {'openRelations'|'electionModule'|'mnewsElection2022'} [props.theme='openRelations']
  *  @param {string} [props.scrollTo] - the first row with the district name to scroll to
  */
 export default function EVC({
@@ -440,7 +448,7 @@ export default function EVC({
  *  @param {string} [props.className]
  *  @param {DataManager} props.dataManager
  *  @param {'rwd'|'mobile'} props.device
- *  @param {'openRelations'|'electionModule'} props.theme
+ *  @param {'openRelations'|'electionModule'|'mnewsElection2022'} props.theme
  *  @param {string} [props.scrollTo] - the first row with the district name to scroll to
  *  @returns {React.ReactElement}
  */
@@ -452,7 +460,7 @@ function _EVC({ className, dataManager, device = 'rwd', theme, scrollTo }) {
   return (
     <ThemeProvider theme={Object.assign({ device }, themeObj[theme])}>
       <Container className={className}>
-        <Header>
+        <Header shouldHideHeader={theme === 'mnewsElection2022'}>
           <h3>{data?.year}</h3>
           <h3>{data?.title}</h3>
         </Header>
@@ -461,7 +469,11 @@ function _EVC({ className, dataManager, device = 'rwd', theme, scrollTo }) {
           defaultValue={districtName}
           onSelect={(n) => setDistrictName(n)}
         />
-        <StyledList dataManager={dataManager} scrollTo={districtName} />
+        <StyledList
+          themeName={theme}
+          dataManager={dataManager}
+          scrollTo={districtName}
+        />
       </Container>
     </ThemeProvider>
   )

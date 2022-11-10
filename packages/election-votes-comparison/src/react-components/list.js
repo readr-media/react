@@ -143,6 +143,12 @@ const TCell = styled.div`
   a {
     color: #d6610c;
     text-decoration: none;
+    color: ${({ theme }) =>
+      theme?.table?.candidate?.name?.color
+        ? theme?.table?.candidate?.name?.color
+        : '#d6610c'};
+    pointer-events: ${({ themeName }) =>
+      themeName === 'mnewsElection2022' && 'none'};
   }
   ${(props) => {
     switch (props.theme?.device) {
@@ -253,8 +259,9 @@ const EntityCell = styled.div`
  *  @param {string} [props.className]
  *  @param {import('./manager').DataManager} props.dataManager
  *  @param {string} props.scrollTo
+ *  @param {string} props.themeName
  */
-export default function List({ className, dataManager, scrollTo }) {
+export default function List({ className, dataManager, scrollTo, themeName }) {
   const rows = dataManager.buildListRows()
   const heads = dataManager.buildListHead()
 
@@ -312,12 +319,27 @@ export default function List({ className, dataManager, scrollTo }) {
       currentBgColor = previousBgColor === 'dark' ? 'light' : 'dark'
       previousBgColor = currentBgColor
     }
+    const backgroundColor = () => {
+      if (themeName === 'mnewsElection2022') {
+        if (currentBgColor === 'dark') {
+          return '#F9F9F9'
+        } else {
+          return '#F5F6F8'
+        }
+      } else {
+        if (currentBgColor === 'dark') {
+          return '#FFF1E8'
+        } else {
+          return '#FFF8F3'
+        }
+      }
+    }
 
     return (
       <TRow
         key={row.id}
         data-row-id={row.id}
-        backgroundColor={currentBgColor === 'dark' ? '#FFF1E8' : '#FFF8F3'}
+        backgroundColor={backgroundColor()}
       >
         {cellsJsx}
       </TRow>
@@ -327,7 +349,11 @@ export default function List({ className, dataManager, scrollTo }) {
   return (
     <Table className={className}>
       <THead>
-        <TRow backgroundColor="#FFF8F3">
+        <TRow
+          backgroundColor={
+            themeName === 'mnewsElection2022' ? '#F5F6F8' : '#FFF8F3'
+          }
+        >
           {heads.map((head, idx) => {
             return <TCell key={`head_${idx}`}>{head}</TCell>
           })}
