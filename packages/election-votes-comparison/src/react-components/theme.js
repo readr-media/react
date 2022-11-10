@@ -28,6 +28,12 @@ export default {
         backgroundColor: '#FFF1E8',
         color: '#0F2D35',
       },
+      row: {
+        backgroundColor: {
+          dark: '#FFF1E8',
+          light: '#FFF8F3',
+        },
+      },
     },
   },
   electionModule: {
@@ -58,6 +64,12 @@ export default {
       head: {
         backgroundColor: '#F2F2F2',
         color: '#0F2D35',
+      },
+      row: {
+        backgroundColor: {
+          dark: '#FFF1E8',
+          light: '#FFF8F3',
+        },
       },
     },
   },
@@ -92,6 +104,12 @@ export default {
       head: {
         backgroundColor: '#F6F6F8',
         color: '#0F2D35',
+      },
+      row: {
+        backgroundColor: {
+          dark: '#F9F9F9',
+          light: '#F5F6F8',
+        },
       },
       candidate: {
         name: {

@@ -385,11 +385,7 @@ export function CouncilMember({
           onSelect={(n) => setDistrictName(n)}
           renderFullOption={(option) => `第${option}選舉區`}
         />
-        <StyledList
-          themeName={theme}
-          dataManager={dataManager}
-          scrollTo={districtName}
-        />
+        <StyledList dataManager={dataManager} scrollTo={districtName} />
       </Container>
     </ThemeProvider>
   )
@@ -472,11 +468,7 @@ function _EVC({ className, dataManager, device = 'rwd', theme, scrollTo }) {
           defaultValue={districtName}
           onSelect={(n) => setDistrictName(n)}
         />
-        <StyledList
-          themeName={theme}
-          dataManager={dataManager}
-          scrollTo={districtName}
-        />
+        <StyledList dataManager={dataManager} scrollTo={districtName} />
       </Container>
     </ThemeProvider>
   )

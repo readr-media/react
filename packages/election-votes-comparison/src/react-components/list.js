@@ -113,7 +113,7 @@ const TRow = styled.div`
   ${/**
    *  @param {Object} props
    *  @param {Object} [props.theme]
-   *  @param {string} [props.backgroundColor]
+   *  @param {string} [props.bgColorTheme]
    */
   (props) => {
     switch (props.theme?.device) {
@@ -127,7 +127,11 @@ const TRow = styled.div`
         return `
           @media ${breakpoint.devices.laptop} {
             display: table-row;
-            background-color: ${props.backgroundColor};
+            background: ${
+              props.theme?.table?.row?.backgroundColor[props?.bgColorTheme]
+                ? props.theme?.table?.row?.backgroundColor[props?.bgColorTheme]
+                : '#fff'
+            }
           }
 
           @media ${breakpoint.devices.laptopBelow} {
@@ -259,9 +263,8 @@ const EntityCell = styled.div`
  *  @param {string} [props.className]
  *  @param {import('./manager').DataManager} props.dataManager
  *  @param {string} props.scrollTo
- *  @param {string} props.themeName
  */
-export default function List({ className, dataManager, scrollTo, themeName }) {
+export default function List({ className, dataManager, scrollTo }) {
   const rows = dataManager.buildListRows()
   const heads = dataManager.buildListHead()
 
@@ -319,28 +322,9 @@ export default function List({ className, dataManager, scrollTo, themeName }) {
       currentBgColor = previousBgColor === 'dark' ? 'light' : 'dark'
       previousBgColor = currentBgColor
     }
-    const backgroundColor = () => {
-      if (themeName === 'mnewsElection2022') {
-        if (currentBgColor === 'dark') {
-          return '#F9F9F9'
-        } else {
-          return '#F5F6F8'
-        }
-      } else {
-        if (currentBgColor === 'dark') {
-          return '#FFF1E8'
-        } else {
-          return '#FFF8F3'
-        }
-      }
-    }
 
     return (
-      <TRow
-        key={row.id}
-        data-row-id={row.id}
-        backgroundColor={backgroundColor()}
-      >
+      <TRow key={row.id} data-row-id={row.id} bgColorTheme={currentBgColor}>
         {cellsJsx}
       </TRow>
     )
@@ -349,11 +333,7 @@ export default function List({ className, dataManager, scrollTo, themeName }) {
   return (
     <Table className={className}>
       <THead>
-        <TRow
-          backgroundColor={
-            themeName === 'mnewsElection2022' ? '#F5F6F8' : '#FFF8F3'
-          }
-        >
+        <TRow bgColorTheme="light">
           {heads.map((head, idx) => {
             return <TCell key={`head_${idx}`}>{head}</TCell>
           })}
