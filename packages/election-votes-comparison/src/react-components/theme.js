@@ -61,4 +61,43 @@ export default {
       },
     },
   },
+  mnewsElection2022: {
+    container: {
+      backgroundColor: '#F6F6F8',
+    },
+    title: {
+      topBlock: {
+        color: '#000',
+        backgroundColor: '#FFF',
+      },
+      bottomBlock: {
+        color: '#FFF',
+        backgroundColor: '#AFAFAF',
+      },
+    },
+    selector: {
+      leftBlock: {
+        backgroundColor: '#004DBC',
+        color: '#FFF',
+      },
+      picker: {
+        option: {
+          color: '#004DBC',
+          borderColor: '#004DBC',
+          backgroundColor: '',
+        },
+      },
+    },
+    table: {
+      head: {
+        backgroundColor: '#F6F6F8',
+        color: '#0F2D35',
+      },
+      candidate: {
+        name: {
+          color: '#004DBC',
+        },
+      },
+    },
+  },
 }
