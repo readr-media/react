@@ -150,9 +150,9 @@ const TCell = styled.div`
     color: ${({ theme }) =>
       theme?.table?.candidate?.name?.color
         ? theme?.table?.candidate?.name?.color
-        : '#d6610c'};
-    pointer-events: ${({ themeName }) =>
-      themeName === 'mnewsElection2022' && 'none'};
+        : '#000'};
+    pointer-events: ${({ theme }) =>
+      theme?.table?.candidate?.name?.isLink ? 'auto' : 'none'};
   }
   ${(props) => {
     switch (props.theme?.device) {

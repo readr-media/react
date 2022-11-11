@@ -34,6 +34,12 @@ export default {
           light: '#FFF8F3',
         },
       },
+      candidate: {
+        name: {
+          isLink: true,
+          color: '#d6610c',
+        },
+      },
     },
   },
   electionModule: {
@@ -69,6 +75,12 @@ export default {
         backgroundColor: {
           dark: '#FFF1E8',
           light: '#FFF8F3',
+        },
+      },
+      candidate: {
+        name: {
+          isLink: true,
+          color: '#d6610c',
         },
       },
     },
@@ -113,6 +125,7 @@ export default {
       },
       candidate: {
         name: {
+          isLink: false,
           color: '#004DBC',
         },
       },
