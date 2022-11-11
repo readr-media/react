@@ -175,6 +175,7 @@ const Container = styled.div`
 `
 
 const Header = styled.header`
+  display: ${({ theme }) => theme.header.display};
   ${(props) => {
     const baseCss = `
       border-top: 4px solid black;
@@ -256,7 +257,7 @@ const Header = styled.header`
         `
       }
     }
-  }}
+  }};
 `
 
 /**
@@ -372,9 +373,7 @@ export function CouncilMember({
   return (
     <ThemeProvider theme={Object.assign({ device }, themeObj[theme])}>
       <Container className={className}>
-        <Header
-          style={{ display: theme === 'mnewsElection2022' ? 'none' : 'block' }}
-        >
+        <Header>
           <h3>{year}</h3>
           <h3>{title}</h3>
         </Header>
@@ -457,9 +456,7 @@ function _EVC({ className, dataManager, device = 'rwd', theme, scrollTo }) {
   return (
     <ThemeProvider theme={Object.assign({ device }, themeObj[theme])}>
       <Container className={className}>
-        <Header
-          style={{ display: theme === 'mnewsElection2022' ? 'none' : 'block' }}
-        >
+        <Header>
           <h3>{data?.year}</h3>
           <h3>{data?.title}</h3>
         </Header>

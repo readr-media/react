@@ -1,5 +1,8 @@
 export default {
   openRelations: {
+    header: {
+      display: 'block',
+    },
     title: {
       topBlock: {
         color: '#0F2D35',
@@ -43,6 +46,9 @@ export default {
     },
   },
   electionModule: {
+    header: {
+      display: 'block',
+    },
     title: {
       topBlock: {
         color: '#000',
@@ -88,6 +94,9 @@ export default {
   mnewsElection2022: {
     container: {
       backgroundColor: '#F6F6F8',
+    },
+    header: {
+      display: 'none',
     },
     title: {
       topBlock: {
