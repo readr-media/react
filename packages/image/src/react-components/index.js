@@ -28,7 +28,7 @@ import React, { useEffect, useRef, useCallback } from 'react' // eslint-disable-
  * - optional, default value is `false`.
  * @returns {JSX.Element}
  */
-export default function Image({
+export default function CustomImage({
   images = { original: '' },
   loadingImage = '',
   defaultImage = '',
@@ -117,19 +117,21 @@ export default function Image({
    */
   const loadImage = (url) => {
     return new Promise((resolve, reject) => {
+      const img = new Image()
+
       const loadHandler = () => {
-        resolve(imageRef.current.src)
-        imageRef.current.removeEventListener('load', loadHandler)
+        resolve(url)
+        img.removeEventListener('load', loadHandler)
       }
       const errorHandler = () => {
         reject()
-        imageRef.current.removeEventListener('error', errorHandler)
+        img.removeEventListener('error', errorHandler)
       }
 
-      imageRef.current.addEventListener('load', loadHandler)
-      imageRef.current.addEventListener('error', errorHandler)
+      img.addEventListener('load', loadHandler)
+      img.addEventListener('error', errorHandler)
 
-      imageRef.current.src = url
+      img.src = url
     })
   }
 
@@ -155,9 +157,10 @@ export default function Image({
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             loadImages(imagesList)
-              .then((image) => {
+              .then((imageUrl) => {
+                imageRef.current.src = imageUrl
                 printLogInDevMode(
-                  `Successfully Load image, current image source is ${image}`
+                  `Successfully Load image, current image source is ${imageUrl}`
                 )
               })
               .catch(() => {
@@ -187,7 +190,7 @@ export default function Image({
       }
     } catch (err) {
       imageRef.current.style.visibility = 'hidden'
-      printLogInDevMode(`Unhandled error happened, hide image element', ${err}`)
+      console.error(`Unhandled error happened, hide image element', ${err}`)
     }
   }, [imagesList, loadImages, defaultImage, printLogInDevMode])
 

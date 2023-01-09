@@ -12,17 +12,17 @@
 
 ## How to Use This Pkg as React Component ?
 1. Install the npm [package](https://www.npmjs.com/package/@readr-media/react-image)
-`yarn add @readr-media/react-images`
+`yarn add @readr-media/react-image`
 2. Import component in the desired place
 
 ```
-import Image from '@readr-media/react-image'
+import CustomImage from '@readr-media/react-image'
 const IMAGES_URL = { w400: "400.png", original: "original.png"}
 export default function SomeComponent() {
   return (
     <div>
       <OtherComponent/>
-      <Image images={IMAGES_URL}/>
+      <CustomImage images={IMAGES_URL}/>
     </div>
   )
 }
@@ -43,7 +43,11 @@ export default function SomeComponent() {
 | isDevMode    | Boolean |     | `false`          | 是否開啟開發模式，若開啟，則在載入圖片成功或失敗時，透過`console.log`顯示相關訊息                                                                                     |
 
 
+## Precautions
+若使用該套件時，禁用了瀏覽器的cache，則同張圖片會載入兩次（一次在函式`loadImage()`中載入各個大小的圖片，一次則在useEffect中，將成功載入的圖片掛載至`<img>`上），這是正常的現象。
+之所以要分載入兩次，而不是在`loadImage()`中嘗試載入圖片並掛載至`<img>`，是因為這樣才能在圖片載入時顯示`loadingImage`。
 
+若無禁用瀏覽器快取，則僅會載入一次圖片。
 
 ## Installation
 `yarn install`
@@ -88,3 +92,4 @@ Note: before publish npm package, we need to bump the package version first.
 - [ ] 建立 CI pipeline，透過 CI 產生 npm package，並且上傳至 npm registry
 - [ ] 透過 Lerna 控制 packages 之間的版號
 - [ ] 實作[Responsive Image](https://developer.mozilla.org/en-US/docs/Learn/HTML/Multimedia_and_embedding/Responsive_images)，並由螢幕寬度決定載入圖片大小。
+- [ ] 在禁用瀏覽器的快取情況下，仍僅需載入圖片一次。
