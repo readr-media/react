@@ -22,8 +22,8 @@ import React, { useEffect, useRef, useCallback } from 'react' // eslint-disable-
  * @param {String | Number} [props.height]
  * - image height.
  * - optional, default value is `"100%"`.
- * @param {Boolean} [props.isDevMode]
- * - can set if is in develop mode
+ * @param {Boolean} [props.debugMode]
+ * - can set if is in debug mode
  * - if `true`, then will print log after image loaded successfully of occur error.
  * - optional, default value is `false`.
  * @returns {JSX.Element}
@@ -36,7 +36,7 @@ export default function CustomImage({
   objectFit = 'cover',
   width = '100%',
   height = '100%',
-  isDevMode = false,
+  debugMode = false,
 }) {
   const imageRef = useRef(null)
   /**
@@ -98,17 +98,17 @@ export default function CustomImage({
   const imagesList = transformImagesContent(images)
 
   /**
-   * print log when `props.isDevMode` is true
+   * print log when `props.debugMode` is true
    * @param {String} message
    * @returns {void}
    */
   const printLogInDevMode = useCallback(
     (message) => {
-      if (isDevMode) {
+      if (debugMode) {
         console.log(message)
       }
     },
-    [isDevMode]
+    [debugMode]
   )
   /**
    * Loads an image and return the URL of image

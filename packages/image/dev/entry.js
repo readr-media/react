@@ -37,7 +37,7 @@ root.render(
         width="100%"
         height="100%"
         objectFit="cover"
-        isDevMode={true}
+        debugMode={true}
       ></Image>
     ))}
   </div>

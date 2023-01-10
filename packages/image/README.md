@@ -33,14 +33,14 @@ export default function SomeComponent() {
 
 | 名稱           | 資料型別    | 必須  | 預設值              | 說明                                                                                                                                  |
 | ------------ | ------- | --- | ---------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
-| images       | Object  | `V` | `{original: ''}` | 圖片設定，範例： `{ w400: '400.png',w800 : '800.png', w1200: '1200.png', original: 'original.png' }`。會由`w400`、`w800`、`w1200`、`original`依序載入 |
-| defaultImage | String  |     | `"``"`           | 預設圖片。當`image`皆載入失敗時，則載入預設圖片。<br>當`loadingImage`未傳入時，則以預設圖片作為圖片載入動畫效果。                                                               |
+| images       | Object  | `V` | `{original: ""}` | 圖片設定，範例： `{ w400: '400.png',w800 : '800.png', w1200: '1200.png', original: 'original.png' }`。會由`w400`、`w800`、`w1200`、`original`依序載入 |
+| defaultImage | String  |     | `""`           | 預設圖片。當`image`皆載入失敗時，則載入預設圖片。<br>當`loadingImage`未傳入時，則以預設圖片作為圖片載入動畫效果。                                                               |
 | loadingImage | String  |     | `""`             | 載入動畫效果，作為載入圖片的動畫。目前僅接受圖片檔URL。                                                                                                       |
-| alt          | String  |     | `''`             | 替代文字                                                                                                                                |
+| alt          | String  |     | `""`             | 替代文字                                                                                                                                |
 | objectFit    | String  |     | `"cover"`        | 圖片區塊填滿設定，即為CSS property `object-fit`                                                                                                |
-| height       | String  |     | `"``100%``"`     | 圖片高度                                                                                                                                |
+| height       | String  |     | `"100%"`     | 圖片高度                                                                                                                                |
 | width        | String  |     | `"100%"`         | 圖片寬度                                                                                                                                |
-| isDevMode    | Boolean |     | `false`          | 是否開啟開發模式，若開啟，則在載入圖片成功或失敗時，透過`console.log`顯示相關訊息                                                                                     |
+| debugMode    | Boolean |     | `false`          | 是否開啟開發模式，若開啟，則在載入圖片成功或失敗時，透過`console.log`顯示相關訊息                                                                                     |
 
 
 ## Precautions
