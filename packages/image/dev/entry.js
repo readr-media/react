@@ -31,8 +31,8 @@ root.render(
       <Image
         key={index}
         images={item}
-        defaultImage=""
-        loadingImage="../loading.gif"
+        defaultImage="post.svg"
+        loadingImage="./loading.gif"
         alt="圖片"
         width="100%"
         height="100%"
