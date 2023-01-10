@@ -24,8 +24,12 @@ const mocks = [
 
 root.render(
   <div>
-    <div style={{ height: '100vh', backgroundColor: 'pink' }}>
-      這是一個滿版的區塊
+    <div style={{ height: '150vh', width: '100%', backgroundColor: 'pink' }}>
+      <p>這是一個高度150vh的區塊。</p>
+      <p>
+        區塊下方是圖片，當圖片進入可視區域(viewport)時，會執行圖片懶載入(lazy
+        load)
+      </p>
     </div>
     {mocks.map((item, index) => (
       <Image
