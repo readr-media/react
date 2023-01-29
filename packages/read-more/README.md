@@ -48,22 +48,23 @@ export default function ComponentName() {
 
 ## Props
 
-| 名稱         | 資料型別 | 必須 | 預設值 | 說明                                                                                                                                                                                        |
-| ------------ | -------- | ---- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| readMoreData | Array    | `V`  | `[]`   | 延伸閱讀文章資訊。範例： `[ { id: 1, slug: 'post-slug-01', caption: '文章標題01', imageUrl: 'https://www.mirrormedia.com.tw', alt: '文章敘述01', link: 'https://www.mirrormedia.mg' } ]` 。 |
+| 名稱           | 資料型別    | 必須  | 預設值              | 說明                                                                                                                                  |
+| ------------ | ------- | --- | ---------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| readMoreData       | Array  | `V` | `[]` | 延伸閱讀文章資訊。範例： `[ { id: 1, slug: 'post-slug-01', caption: '文章標題01', imageUrl: 'https://www.mirrormedia.com.tw', alt: '文章敘述01', link: 'https://www.mirrormedia.mg' } ]` 。                                                               |
+| title | String  |     | `"延伸閱讀"`           | 標題。                                                               |
+| titleColor | String  |     | `"#ffffff"`             | 標題顏色。                                                                                                       |
+| titleSize          | String  |     | `""`             | 標題尺寸。                                                                                                                                |
+| captionColor    | String  |     | `"#ffffff"`        | 文章標題顏色。                                                                                               |
+| captionSize       | String  |     | `""`     | 文章標題尺寸。                                                                                                                                |
+| defaultImage        | String  |     | `""`         | 文章預設圖片。當`readMoreData`的`imageUrl`載入失敗時，則載入預設圖片。                                                                                                                                |
 
-`id`: required。文章 id。
-`slug`: optional。文章 slug，用於`https://www.mirrormedia.mg/story/${slug}/`作為文章連結。如無可選擇使用`link`作為文章連結資料。
-`caption`: required。文章標題。
-`imageUrl`: optional。文章圖片 URL。
-`alt`: optional。替代文字。
-`link`: optional。文章連結。 |
-| title | String | | `"延伸閱讀"` | 標題 |
-| titleColor | String | | `"#ffffff"` | 標題顏色 |
-| titleSize | String | | `""` | 標題尺吋 |
-| captionColor | String | | `"#ffffff"` | 文章標題顏色 |
-| captionSize | String | | `""` | 文章標題尺吋 |
-| defaultImage | String | | `""` | 預設圖片。當`readMoreData`的`imageUrl`載入失敗時，則載入預設圖片。 |
+### readMoreData detail
+- `id`: required。文章 id。
+- `slug`: optional。文章 slug，用於`https://www.mirrormedia.mg/story/${slug}/`作為文章連結。如無可選擇使用`link`作為文章連結資料。
+- `caption`: required。文章標題。
+- `imageUrl`: optional。文章圖片 URL。
+- `alt`: optional。替代文字。
+- `link`: optional。文章連結。   
 
 ## Installation
 
