@@ -3,6 +3,9 @@
 ## Feature
 
 - 「延伸閱讀」共用元件。
+- 根據螢幕寬度，自動調整文章排版形式。
+
+<div align=left><img width="500" height="500" src="https://github.com/ChangRongXuan/react/blob/read-more/packages/read-more/read-more-example.png"/></div>
 
 ## How to Use This Pkg as React Component ?
 
@@ -53,17 +56,21 @@ export default function ComponentName() {
 | readMoreData       | Array  | `V` | `[]` | 延伸閱讀文章資訊。範例： `[ { id: 1, slug: 'post-slug-01', caption: '文章標題01', imageUrl: 'https://www.mirrormedia.com.tw', alt: '文章敘述01', link: 'https://www.mirrormedia.mg' } ]` 。                                                               |
 | title | String  |     | `"延伸閱讀"`           | 標題。                                                               |
 | titleColor | String  |     | `"#ffffff"`             | 標題顏色。                                                                                                       |
-| titleSize          | String  |     | `""`             | 標題尺寸。                                                                                                                                |
+| titleSize          | String  |     | `""`             | 標題尺寸（font-size)。                                                                                                                                |
 | captionColor    | String  |     | `"#ffffff"`        | 文章標題顏色。                                                                                               |
-| captionSize       | String  |     | `""`     | 文章標題尺寸。                                                                                                                                |
+| captionSize       | String  |     | `""`     | 文章標題尺寸（font-size)。                                                                                                                                |
 | defaultImage        | String  |     | `""`         | 文章預設圖片。當`readMoreData`的`imageUrl`載入失敗時，則載入預設圖片。                                                                                                                                |
 
-### readMoreData detail
+## Props Detail : readMoreData
+
+### required
 - `id`: required。文章 id。
-- `slug`: optional。文章 slug，用於`https://www.mirrormedia.mg/story/${slug}/`作為文章連結。如無可選擇使用`link`作為文章連結資料。
 - `caption`: required。文章標題。
+
+### optional
+- `slug`: optional。文章 slug，用於`https://www.mirrormedia.mg/story/${slug}/`作為文章連結。如無可選擇使用`link`作為文章連結資料。
 - `imageUrl`: optional。文章圖片 URL。
-- `alt`: optional。替代文字。
+- `alt`: optional。文章圖片替代文字。
 - `link`: optional。文章連結。   
 
 ## Installation
