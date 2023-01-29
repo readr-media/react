@@ -64,14 +64,14 @@ export default function ComponentName() {
 ## Props Detail : readMoreData
 
 ### required
-- `id`: required。文章 id。
-- `caption`: required。文章標題。
+- `id`: 文章 id。
+- `caption`: 文章標題。
 
 ### optional
-- `slug`: optional。文章 slug，用於`https://www.mirrormedia.mg/story/${slug}/`作為文章連結。如無可選擇使用`link`作為文章連結資料。
-- `imageUrl`: optional。文章圖片 URL。
-- `alt`: optional。文章圖片替代文字。
-- `link`: optional。文章連結。   
+- `slug`: 文章 slug，用於`https://www.mirrormedia.mg/story/${slug}/`作為文章連結。如無可選擇使用`link`作為文章連結資料。
+- `imageUrl`: 文章圖片 URL。
+- `alt`: 文章圖片替代文字。
+- `link`: 文章連結。   
 
 ## Installation
 
