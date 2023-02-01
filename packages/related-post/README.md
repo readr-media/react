@@ -14,7 +14,7 @@
    - 使用者可設定 `debugMode`為 true，於開發環境下查看 error message。( 預設為 false )
    - 使用者可傳入 `className` 或使用 `default title/caption className` 變更標題/文章標題樣式。
 
-<div align=left><img width="500" height="500" src="https://github.com/ChangRongXuan/react/blob/read-more/packages/read-more/read-more-example.png"/></div>
+<div align=left><img width="500" height="500" src="https://github.com/ChangRongXuan/react/blob/read-more/packages/related-post/read-more-example.png"/></div>
 
 ## How to Use This Pkg as React Component ?
 
