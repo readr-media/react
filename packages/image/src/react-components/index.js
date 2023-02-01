@@ -1,6 +1,10 @@
 import React, { useEffect, useRef } from 'react' // eslint-disable-line
 
 /**
+ * Check an String contain integer, for example, 'w1200' is valid, 'original' or 'randomName' is not valid
+ */
+const REGEX = /(\d+)/
+/**
  *
  * @param {Object} props
  * @param {Object} props.images
@@ -86,9 +90,8 @@ export default function CustomImage({
       // pair: [w800, image-w800.jpg], [original, image.jpg]
       const keyA = pairA[0]
       const keyB = pairB[0]
-      const regex = /(\d+)/
-      const matchedA = keyA.match(regex)
-      const matchedB = keyB.match(regex)
+      const matchedA = keyA.match(REGEX)
+      const matchedB = keyB.match(REGEX)
       if (matchedA && matchedB) {
         // match: [800]
         const sizeA = Number(matchedA[0])
@@ -111,8 +114,7 @@ export default function CustomImage({
     const str = imagesList
       .filter((pair) => pair[0] !== 'original')
       .map((pair) => {
-        const regex = /(\d+)/
-        const width = pair[0].match(regex)[0]
+        const width = pair[0].match(REGEX)[0]
         return `${pair[1]} ${width}w`
       })
       .join(',')
@@ -123,7 +125,6 @@ export default function CustomImage({
   }
 
   const imagesList = transformImagesContent(images)
-
   const imageSrcSet = transformImagesSrcSet(imagesList)
 
   /**
@@ -155,9 +156,8 @@ export default function CustomImage({
     const imagesWidthList = imagesList
       .filter((pair) => pair[0] !== 'original')
       .map((pair) => {
-        const regex = /(\d+)/
-        const width = pair[0].match(regex)[0]
-        return width
+        const width = pair[0].match(REGEX)[0]
+        return Number(width)
       })
     switch (loadMode) {
       case 'auto':
@@ -199,14 +199,48 @@ export default function CustomImage({
 
       case 'manual':
         return new Promise((resolve) => {
-          const isResolutionExisted = imagesList.find(
-            (pair) => pair[0] === loadResolution
-          )
-
-          if (loadResolution && isResolutionExisted) {
-            resolve(loadResolution)
+          //loadResolution is not existed,
+          //not an integer with letter 'w' start,
+          //is 'original', then return the biggest sizes in imagesList.
+          if (
+            !loadResolution ||
+            !loadResolution.match(REGEX) ||
+            loadResolution === 'original'
+          ) {
+            resolve(imagesList[imagesList.length - 1][0])
           } else {
-            resolve(imagesList[0][0])
+            const width = Number(loadResolution.match(REGEX)[0])
+
+            /**
+             *
+             * @param {number[]} arr
+             * @param {number} num
+             * @returns {number}
+             */
+            const getClosestNumber = (arr, num) => {
+              let closest = arr[0]
+
+              arr.some((val, i) => {
+                if (val === num) {
+                  closest = val
+                } else if (
+                  i < arr.length - 1 &&
+                  num > val &&
+                  num < arr[i + 1]
+                ) {
+                  closest = arr[i + 1]
+                } else if (i === arr.length - 1 && num > val) {
+                  closest = undefined
+                }
+              })
+              return closest
+            }
+            const closestNumber = getClosestNumber(imagesWidthList, width)
+            if (closestNumber) {
+              resolve(`w${closestNumber}`)
+            } else {
+              resolve(imagesList[imagesList.length - 1][0])
+            }
           }
         })
     }
