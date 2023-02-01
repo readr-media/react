@@ -152,8 +152,18 @@ export default function CustomImage({
    * @returns {Promise<string>} - the resolution of image should be loaded
    */
   const getResolution = (imagesList) => {
+    const imagesWidthList = imagesList
+      .filter((pair) => pair[0] !== 'original')
+      .map((pair) => {
+        const regex = /(\d+)/
+        const width = pair[0].match(regex)[0]
+        return width
+      })
     switch (loadMode) {
       case 'auto':
+        const sizes = imagesWidthList
+          .map((width) => `(max-width: ${width}px) ${width}px`)
+          .join(', ')
         return new Promise((resolve, reject) => {
           const img = new Image()
           /**
@@ -183,7 +193,7 @@ export default function CustomImage({
 
           img.addEventListener('load', eventHandler)
           img.addEventListener('error', eventHandler)
-
+          img.sizes = sizes
           img.srcset = imageSrcSet
         })
 
