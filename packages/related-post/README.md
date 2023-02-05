@@ -56,10 +56,10 @@ export default function ComponentName() {
 | ---------------- | -------- | ---- | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | readMoreData     | Array    | `V`  | `[]`         | 延伸閱讀文章資訊。範例：`[ { id: 1, slug: 'post-slug-01', caption: '文章標題 01', imageUrl: 'https://www.mirrormedia.com.tw', alt: '文章敘述 01',link: 'https://www.mirrormedia.mg' } ]` 。 |
 | title            | String   |      | `"延伸閱讀"` | 標題。                                                                                                                                                                                      |
-| titleClassName   | String   |      | `""`         | 指定標題 className，可用於變更標題樣式。或直接使用預設 className：`related-post-title`。                                                                                                    |
-| captionClassName | String   |      | `""`         | 指定文章標題 className，可用於變更文章標題樣式。或直接使用預設 className：`related-post-caption`。                                                                                          |
+| titleClassName   | String   |      | `""`         | 指定標題 className，可用於變更標題樣式。預設 className 為：`related-post-title`。                                                                                                           |
+| captionClassName | String   |      | `""`         | 指定文章標題 className，可用於變更文章標題樣式。預設 className 為：`related-post-caption`。                                                                                                 |
 | debugMode        | Boolean  |      | `"false"`    | 是否開啟開發模式。若開啟，可於開發環境下透過 `console.log` 顯示相關訊息。                                                                                                                   |  |  |  |
-| defaultImage     | String   |      | `""`         | 文章預設圖片。當`readMoreData`的 `imageUrl` 載入失敗時，則載入預設圖片。                                                                                                                    |
+| defaultImage     | String   |      | `""`         | 文章預設圖片。當 `readMoreData` 的 `imageUrl` 載入失敗時，則載入預設圖片。                                                                                                                  |
 
 ## Props Detail : readMoreData
 
@@ -120,3 +120,4 @@ Note: before publish npm package, we need to bump the package version first.
 
 - [ ] 建立 CI pipeline，透過 CI 產生 npm package，並且上傳至 npm registry
 - [ ] 透過 Lerna 控制 packages 之間的版號
+- [ ] 實作圖片 lazy-load ，或 import `react-image`
