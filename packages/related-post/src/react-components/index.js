@@ -38,33 +38,25 @@ const Title = styled.p`
 `
 
 /**
- *  @typedef {Array<Object>} Post
- *  @property {String} caption
- *  @property {Number | String} [id]
- *  @property {String} [slug]
- *  @property {String} [imageUrl]
- *  @property {String} [alt]
- *  @property {String} [link]
- */
-
-/**
+ * @typedef {import('../typedef').Post} Post
+ *
  * @param {Object} props
- * @param {Post} props.relatedData
+ * @param {Post[]} props.relatedData
  * - post data, default value is `[]`.
  * - required.
- * @param {String} [props.title]
+ * @param {string} [props.title]
  * - title.
  * - optional, default value is `"延伸閱讀"`.
- * @param {String} [props.titleClassName]
+ * @param {string} [props.titleClassName]
  * - className of title.
- * - optional, default value is `""`.
- * @param {String} [props.captionClassName]
+ * - optional, default value is `"related-post-title"`.
+ * @param {string} [props.captionClassName]
  * - className of caption.
- * - optional, default value is `""`.
- * @param {String} [props.defaultImage]
+ * - optional, default value is `"related-post-caption"`.
+ * @param {string} [props.defaultImage]
  * - default image, it will show if `relatedData.imageUrl` can not be loaded
  * - optional, default value is `""`.
- * @param {Boolean} [props.debugMode]
+ * @param {boolean} [props.debugMode]
  * - can set if is in debug mode
  * - if `true`, then will print log of error.
  * - optional, default value is `false`.
@@ -74,52 +66,34 @@ const Title = styled.p`
 export default function RelatedPost({
   relatedData = [],
   title = '延伸閱讀',
-  titleClassName = '',
-  captionClassName = '',
+  titleClassName = 'related-post-title',
+  captionClassName = 'related-post-caption',
   defaultImage = '',
   debugMode = false,
 }) {
-  console.log('debugMode', debugMode)
-  /**
-   * print log when `props.debugMode` is true
-   * @param {String} message
-   * @returns {void}
-   */
-  const printLogInDevMode = useCallback(
-    (message) => {
-      if (debugMode) {
-        console.log(message)
-      }
-    },
-    [debugMode]
-  )
-
-  useEffect(() => {
-    try {
-      //check whether `relatedData` is empty.
-      //if `relatedData` is empty, show error message.
-      if (relatedData.length === 0) {
-        printLogInDevMode(`ERROR: props.relatedData has no data`)
-      }
-
-      //check each Object in `relatedData` has `caption`.
-      //if some Object in `relatedData` lose `caption`, show error message.
-      const checkEmptyCaption = (element) => element.caption !== undefined
-      if (relatedData.every(checkEmptyCaption)) {
-        printLogInDevMode(`ERROR: caption has no data`)
-      }
-    } catch (err) {
-      console.log(err)
+  try {
+    //check whether `relatedData` is empty.
+    //if `relatedData` is empty, show error message.
+    if (relatedData.length === 0 && debugMode) {
+      console.log(`ERROR: props.relatedData has no data`)
     }
-  }, [printLogInDevMode, relatedData])
+
+    //check each Object in `relatedData` has `caption`.
+    //if some Object in `relatedData` lose `caption`, show error message.
+    const checkEmptyCaption = (element) => element.caption !== undefined
+    if (relatedData.every(checkEmptyCaption) && debugMode) {
+      console.log(`ERROR: caption has no data`)
+    }
+  } catch (err) {
+    console.log(err)
+  }
 
   return (
     <Container>
-      <Title className={`related-post-title ${titleClassName}`}>{title}</Title>
+      <Title className={titleClassName}>{title}</Title>
       {relatedData && (
         <ul className="related-post-box">
           <RelatedLists
-            postAmount={relatedData.length}
             relatedData={relatedData}
             captionClassName={captionClassName}
             defaultImage={defaultImage}
