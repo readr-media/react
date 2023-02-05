@@ -47,16 +47,6 @@ const Container = styled.div`
   }
 `
 
-/**
- *  @typedef {Array<Object>} Post
- *  @property {Number | String} id
- *  @property {String} caption
- *  @property {String} [slug]
- *  @property {String} [imageUrl]
- *  @property {String} [alt]
- *  @property {String} [link]
- */
-
 root.render(
   <Container>
     <RelatedPost
@@ -64,7 +54,7 @@ root.render(
       title="相關文章"
       titleClassName="title"
       captionClassName="caption"
-      defaultImage="./img/default.png"
+      defaultImage="./image/default.png"
       debugMode={true}
     />
   </Container>
