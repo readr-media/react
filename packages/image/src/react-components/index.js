@@ -269,7 +269,14 @@ export default function CustomImage({
       return prevPromise.catch(() => loadImage(pair[1]))
     }, Promise.reject())
   }
-
+  /**
+   * set url on <img> and remove css `filter` property after loaded
+   * @param {string} url
+   */
+  const setImageUrl = (url) => {
+    imageRef.current.src = url
+    imageRef.current.style.filter = 'unset'
+  }
   useEffect(() => {
     try {
       let callback = (entries, observer) => {
@@ -281,13 +288,13 @@ export default function CustomImage({
               .then((resolution) => {
                 loadImages(resolution, imagesList)
                   .then((url) => {
-                    imageRef.current.src = url
+                    setImageUrl(url)
                     printLogInDevMode(
                       `Successfully Load image, current image source is ${url}`
                     )
                   })
                   .catch(() => {
-                    imageRef.current.src = defaultImage
+                    setImageUrl(defaultImage)
                     printLogInDevMode(
                       'Unable to load any image, try to use default image as image src'
                     )
@@ -297,13 +304,11 @@ export default function CustomImage({
                   })
               })
               .catch(() => {
-                imageRef.current.src = defaultImage
+                setImageUrl(defaultImage)
                 printLogInDevMode(
                   'Unable to get resolution, try to use default image as image src'
                 )
               })
-
-            imageRef.current.style.filter = 'unset'
             observer.unobserve(entry.target)
           }
         })
