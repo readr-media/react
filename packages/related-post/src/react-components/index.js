@@ -1,6 +1,6 @@
-import React, { useCallback, useEffect } from 'react' // eslint-disable-line
+import React from 'react' // eslint-disable-line
 import styled from 'styled-components'
-import RelatedLists from './related-list'
+import RelatedList from './related-list'
 
 const Container = styled.div`
   width: 100%;
@@ -74,14 +74,14 @@ export default function RelatedPost({
   try {
     //check whether `relatedData` is empty.
     //if `relatedData` is empty, show error message.
-    if (relatedData.length === 0 && debugMode) {
+    if (relatedData?.length === 0 && debugMode) {
       console.log(`ERROR: props.relatedData has no data`)
     }
 
     //check each Object in `relatedData` has `caption`.
     //if some Object in `relatedData` lose `caption`, show error message.
     const checkEmptyCaption = (element) => element.caption !== undefined
-    if (relatedData.every(checkEmptyCaption) && debugMode) {
+    if (relatedData?.every(checkEmptyCaption) && debugMode) {
       console.log(`ERROR: caption has no data`)
     }
   } catch (err) {
@@ -91,9 +91,9 @@ export default function RelatedPost({
   return (
     <Container>
       <Title className={titleClassName}>{title}</Title>
-      {relatedData && (
+      {relatedData?.length !== 0 && (
         <ul className="related-post-box">
-          <RelatedLists
+          <RelatedList
             relatedData={relatedData}
             captionClassName={captionClassName}
             defaultImage={defaultImage}
