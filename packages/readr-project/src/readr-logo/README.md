@@ -38,10 +38,10 @@ export default function ComponentName() {
   return (
     <Container>
       <ReadrLogo
-      size="80px"
-      color="black"
-      className="custom-name"
-      onClick={ClickLogo}
+       size="80px"
+       color="black"
+       className="custom-name"
+       onClick={ClickLogo}
       />
      </Container >
   )
