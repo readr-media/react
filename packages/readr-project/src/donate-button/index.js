@@ -1,20 +1,8 @@
 import React from 'react' // eslint-disable-line
 import styled from 'styled-components'
 
-const Container = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 48px 20px 52px;
-
-  @media (min-width: 576px) {
-    padding: 60px 0px 64px;
-  }
-`
-
 const Button = styled.a`
   font-family: 'Source Han Sans Traditional', sans-serif;
-  padding: 48px 20px 52px;
   width: 100%;
   max-width: 396px;
   display: block;
@@ -31,11 +19,16 @@ const Button = styled.a`
   text-decoration: none;
   color: #000928;
   background-color: #ebf02c;
+  margin: 48px auto 52px;
 
   &:hover {
     cursor: pointer;
     background: #04295e;
     color: #ffffff;
+  }
+
+  @media (min-width: 576px) {
+    margin: 60px auto 64px;
   }
 `
 
@@ -52,16 +45,14 @@ const Button = styled.a`
 
 export default function DonateButton({ className = 'donate-button', onClick }) {
   return (
-    <Container>
-      <Button
-        className={className}
-        href="https://www.readr.tw/donate"
-        target="_blank"
-        rel="noopener noreferrer"
-        onClick={onClick}
-      >
-        贊助 READr 一起媒體實驗改革
-      </Button>
-    </Container>
+    <Button
+      className={className}
+      href="https://www.readr.tw/donate"
+      target="_blank"
+      rel="noopener noreferrer"
+      onClick={onClick}
+    >
+      贊助 READr 一起媒體實驗改革
+    </Button>
   )
 }
