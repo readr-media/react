@@ -2,6 +2,7 @@ import React from 'react' // eslint-disable-line
 import styled from 'styled-components'
 
 const Button = styled.a`
+  font-family: 'Source Han Sans Traditional', sans-serif;
   width: 100%;
   max-width: 568px;
   display: block;
@@ -16,7 +17,7 @@ const Button = styled.a`
   padding: 12px 24px;
   text-decoration: none;
   background-color: #04295e;
-  margin: 48px 20px;
+  margin: 48px auto;
 
   &:hover {
     cursor: pointer;
