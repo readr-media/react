@@ -4,8 +4,10 @@
 
 - 元件功能
   - 點擊按鈕可另開分頁至 [Readr 電子報訂閱頁面](https://mirrormedia.us20.list-manage.com/subscribe?u=abc4070576912aac81ed23a44&id=ca41073bb5)。
-  - 使用預設的 className : '`.subscribe-button`' 調整按鈕樣式，或傳入自定義的 className，並以該 className 進行調整。
+  - 使用預設的 className : `.subscribe-button` 調整按鈕樣式，或傳入自定義的 className，並以該 className 進行調整。
   - 可傳入 onClick function，設定按鈕點擊後所觸發的函式。( 可利用此 props 設定 GA Event )
+
+![Subscribe Button](https://github.com/ChangRongXuan/Portfolio/blob/main/imgs/subscribe-button.png)
 
 ## How to Use This React Component ?
 
@@ -49,10 +51,10 @@ export default function ComponentName() {
 
 ## Props
 
-| 名稱      | 資料型別          | 必須 | 預設值             | 說明                                                                                    |
-| --------- | ----------------- | ---- | ------------------ | --------------------------------------------------------------------------------------- |
-| className | String            |      | `subscribe-button` | 自訂 className。如無傳入自訂義 className，仍可透過 '`.subscribe-button`' 更改按鈕樣式。 |
-| onClick   | MouseEventHandler |      | ' '                | 點擊按鈕後觸發之函式。                                                                  |
+| 名稱      | 資料型別          | 必須 | 預設值             | 說明                                                                                  |
+| --------- | ----------------- | ---- | ------------------ | ------------------------------------------------------------------------------------- |
+| className | String            |      | `subscribe-button` | 自訂 className。如無傳入自訂義 className，仍可透過 `.subscribe-button` 更改按鈕樣式。 |
+| onClick   | MouseEventHandler |      | ' '                | 點擊按鈕後觸發之函式。                                                                |
 
 ## TODOs
 
