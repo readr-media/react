@@ -3,34 +3,43 @@ import styled from 'styled-components'
 
 import { ReadrIcon } from './react-components/icon'
 
-const LogoWrap = styled.div`
-  height: auto;
+const LogoWrapper = styled.div`
   cursor: pointer;
   display: inline-block;
   margin: 12px 20px;
   width: ${/**
    *  @param {Object} props
-   *  @param {string | number} props.width
-   */ (props) => (props.width ? props.width : '42px')};
+   *  @param {string} props.size
+   */ (props) => (props.size ? props.size : '42px')};
+
+  height: ${/**
+   *  @param {Object} props
+   *  @param {string} props.size
+   */ (props) => (props.size ? props.size : '42px')};
 
   @media (min-width: 576px) {
     margin: 16px 24px;
     width: ${/**
      *  @param {Object} props
-     *  @param {string | number} props.width
-     */ (props) => (props.width ? props.width : '48px')};
+     *  @param {string} props.size
+     */ (props) => (props.size ? props.size : '48px')};
+
+    height: ${/**
+     *  @param {Object} props
+     *  @param {string} props.size
+     */ (props) => (props.size ? props.size : '48px')};
   }
 `
 
 /**
  * @param {Object} props
- * @param {string | number} [props.width]
- * - width of logo.
+ * @param {string | number} [props.size]
+ * - size of logo. 1:1 aspect ratio of width to height
  * - optional, default value is `''`.
  * @param {string} [props.color]
  * - color of logo.
- * - optional, default value is `"#ffffff"`.
- *  * @param {string} [props.className]
+ * - optional, default value is `''`.
+ * @param {string} [props.className]
  * - className of logo.
  * - optional, default value is 'readr-logo'.
  * @param {import("react").MouseEventHandler} [props.onClick]
@@ -40,29 +49,29 @@ const LogoWrap = styled.div`
  */
 
 export default function ReadrLogo({
-  width = '',
+  size = '',
   color = '',
   className = 'readr-logo',
   onClick,
 }) {
-  let logoWidth
+  let logoSize
 
-  switch (typeof width) {
+  switch (typeof size) {
     case 'string':
-      logoWidth = width
+      logoSize = size
       break
     case 'number':
-      logoWidth = `${width}px`
+      logoSize = `${size}px`
       break
     default:
-      logoWidth = width
+      logoSize = size
   }
 
   return (
-    <LogoWrap width={logoWidth} className={className} onClick={onClick}>
+    <LogoWrapper width={logoSize} className={className} onClick={onClick}>
       <a href="https://www.readr.tw/" rel="noopener noreferrer">
         <ReadrIcon color={color} />
       </a>
-    </LogoWrap>
+    </LogoWrapper>
   )
 }
