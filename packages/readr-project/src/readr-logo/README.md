@@ -23,9 +23,6 @@ import styled from 'styled-components'
 import { ReadrLogo } from '@readr-media/readr-project'
 
 const Container = styled.div`
-  display: flex;
-  align-item: center;
-  justify-content: center;
 
   //adjust style by passing `className` props
   .custom-name {
@@ -39,24 +36,26 @@ const ClickLogo = () => {
 
 export default function ComponentName() {
   return (
-    <ReadrLogo
-     size="80px"
-     color="black"
-     className="custom-name"
-     onClick={ClickLogo}
-     />
+    <Container>
+      <ReadrLogo
+      size="80px"
+      color="black"
+      className="custom-name"
+      onClick={ClickLogo}
+      />
+     </Container >
   )
 }
 ```
 
 ## Props
 
-| 名稱      | 資料型別          | 必須 | 預設值          | 說明                                                                               |
-| --------- | ----------------- | ---- | --------------- | ---------------------------------------------------------------------------------- |
-| size   | String / Number |      | ' '             | 設定LOGO寬高（ 寬高比 1:1 )。                                                          |
-| color   | String |      | ' '             | 設定 LOGO 顏色。                                                             |
+| 名稱      | 資料型別          | 必須 | 預設值       | 說明                                                                                    |
+| --------- | ----------------- | ---- | ------------ | --------------------------------------------------------------------------------------- |
+| size      | String / Number   |      | ' '          | 設定 LOGO 寬高（ 寬高比 1:1 )。                                                         |
+| color     | String            |      | ' '          | 設定 LOGO 顏色。                                                                        |
 | className | String            |      | `readr-logo` | 自訂 className。如無傳入自訂義 className，仍可透過 `.readr-logo` 更改 LOGO 樣式或尺寸。 |
-| onClick   | MouseEventHandler |      | ' '             | 點擊 LOGO 後觸發之函式。                                                             |
+| onClick   | MouseEventHandler |      | ' '          | 點擊 LOGO 後觸發之函式。                                                                |
 
 ## TODOs
 
