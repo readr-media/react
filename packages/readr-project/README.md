@@ -5,7 +5,6 @@
 `readr-project` 整理了 [Readr](https://www.readr.tw/) 網站與專題頁面共同會使用到的元件，詳細使用方式可參閱各元件的 README.md。
 
 - Readr Logo: see [src/readr-logo](https://github.com/ChangRongXuan/react/tree/readr-project/packages/readr-project/src/readr-logo)。
-- 社群分享按鈕: see [src/share-button](https://github.com/ChangRongXuan/react/tree/readr-project/packages/readr-project/src/share-button)。
 - 贊助按鈕: see [src/donate-button](https://github.com/ChangRongXuan/react/tree/readr-project/packages/readr-project/src/donate-button)。
 - 訂閱電子報按鈕: see [src/subscribe-button](https://github.com/ChangRongXuan/react/tree/readr-project/packages/readr-project/src/subscribe-button)。
 - 相關報導/最新報導: see [src/related-post](https://github.com/ChangRongXuan/react/tree/readr-project/packages/readr-project/src/related-post)。
@@ -22,7 +21,6 @@ import {
   DonateButton,
   SubscribeButton,
   RelatedPost,
-  ShareButton,
 } from '@readr-media/readr-project'
 
 export default function SomeComponent() {
@@ -31,7 +29,6 @@ export default function SomeComponent() {
   <>
     <div className="header">
       <ReadrLogo />
-      <ShareButton />
     </div>
 
     <SubscribeButton />
