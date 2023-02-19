@@ -1,42 +1,50 @@
-# [@readr-media/readr-project](https://www.npmjs.com/package/@readr-media/readr-project) &middot; ![npm version](https://img.shields.io/npm/v/@readr-media/readr-project.svg?style=flat)
+# [@readr-media/mirrormedia-project](https://www.npmjs.com/package/@readr-media/mirrormedia-project) &middot; ![npm version](https://img.shields.io/npm/v/@readr-media/mirrormedia-project.svg?style=flat)
 
-## Feature - Readr Site/Project 共用元件
+## Feature - MirrorMedia Site/Project 共用元件
 
-`readr-project` 整理了 [Readr](https://www.readr.tw/) 網站與專題頁面共同會使用到的元件，詳細使用方式可參閱各元件的 README.md。
+`mirrormedia-project` 整理了 [MirrorMedia](https://www.mirrormedia.mg/) (鏡週刊/鏡電視）網站與專題頁面共同會使用到的元件，詳細使用方式可參閱各元件的 README.md。
 
-- Readr Logo: see [src/readr-logo](https://github.com/ChangRongXuan/react/tree/readr-project/packages/readr-project/src/readr-logo)。
-- 贊助按鈕: see [src/donate-button](https://github.com/ChangRongXuan/react/tree/readr-project/packages/readr-project/src/donate-button)。
-- 訂閱電子報按鈕: see [src/subscribe-button](https://github.com/ChangRongXuan/react/tree/readr-project/packages/readr-project/src/subscribe-button)。
-- 相關報導/最新報導: see [src/related-post](https://github.com/ChangRongXuan/react/tree/readr-project/packages/readr-project/src/related-post)。
+- MirrorMediaLogo : see [src/mirror-media-logo](https://github.com/ChangRongXuan/react/tree/readr-project/packages/readr-project/src/mirror-media-logo)。
+- MirrorTVLogo: see [src/mirror-tv-logo](https://github.com/ChangRongXuan/react/tree/readr-project/packages/readr-project/src/mirror-tv-logo)。
+- 延伸閱讀/相關報導: see [src/related-post](https://github.com/ChangRongXuan/react/tree/readr-project/packages/readr-project/src/related-post)。
+- 社群分享按鈕: see [src/share-button](https://github.com/ChangRongXuan/react/tree/readr-project/packages/readr-project/src/share-button)。
 
 ## How to Use This Pkg?
 
 1. Install the npm [package](https://www.npmjs.com/package/@readr-media/icon)
-   `yarn add @readr-media/readr-project`
+   `yarn add @readr-media/mirrormedia-project`
 2. Import component in the desired place
 
 ```
 import {
-  ReadrLogo,
-  DonateButton,
-  SubscribeButton,
+  MirrorMediaLogo,
+  MirrorTVLogo,
   RelatedPost,
-} from '@readr-media/readr-project'
+  ShareButton,
+} from '@readr-media/mirrormedia-project'
+
+const mockData = [
+  {
+    id: 1,
+    slug: 'test01',
+    caption: '【寵粉速報】5元就能訂閱「鏡週刊會員制」',
+    imageUrl:
+      'https://www.mirrormedia.com.tw/assets/images/20221017214008-027f6c46502e220dd63521d758ef95e6.jpg',
+    alt: 'alt測試1',
+  },
+]
 
 export default function SomeComponent() {
 
   return (
   <>
     <div className="header">
-      <ReadrLogo />
+      <MirrorMediaLogo />
+      <MirrorTVLogo />
+      <ShareButton />
     </div>
 
-    <SubscribeButton />
-    <DonateButton />
-
-    <div className="report">
-      <RelatedPost />
-    </div>
+    <RelatedPost relatedData={mockData} />
   </>
   )
 }

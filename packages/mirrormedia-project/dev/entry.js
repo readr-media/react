@@ -38,26 +38,42 @@ const mockData = [
 
 const Container = styled.div`
   .title {
-    color: red;
+    color: blue;
     font-size: 20px;
   }
   .caption {
-    color: blue;
     font-size: 12px;
+  }
+`
+const Header = styled.div`
+  padding: 20px 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 50px;
+
+  .mirrortv-logo {
+    width: 250px;
+  }
+
+  .mirrormedia-logo {
+    width: 200px;
   }
 `
 
 root.render(
   <Container>
-    <MirrorTVLogo color="red" />
-    <MirrorMediaLogo />
-    <ShareButton direction="vertical" />
+    <Header>
+      <MirrorTVLogo color="blue" />
+      <MirrorMediaLogo color="#494949" />
+      <ShareButton direction="horizon" size={50} />
+    </Header>
+
     <RelatedPost
       relatedData={mockData}
       title="相關文章"
       titleClassName="title"
       captionClassName="caption"
-      defaultImage="./image/default.png"
       debugMode={true}
     />
   </Container>

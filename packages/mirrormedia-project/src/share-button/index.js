@@ -15,18 +15,14 @@ const ButtonWrapper = styled.div`
    *  @param {string} props.size
    */ (props) => (props.size ? props.size : '21px')};
 
-  height: ${/**
-   *  @param {Object} props
-   *  @param {string} props.size
-   */ (props) => (props.size ? props.size : '21px')};
+  svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
 
   @media (min-width: 768px) {
     width: ${/**
-     *  @param {Object} props
-     *  @param {string} props.size
-     */ (props) => (props.size ? props.size : '28px')};
-
-    height: ${/**
      *  @param {Object} props
      *  @param {string} props.size
      */ (props) => (props.size ? props.size : '28px')};

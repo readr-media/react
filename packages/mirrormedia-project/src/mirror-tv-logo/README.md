@@ -1,89 +1,59 @@
-# [@readr-media/react-icon](https://www.npmjs.com/package/@readr-media/icon) &middot; ![npm version](https://img.shields.io/npm/v/@readr-media/react-image.svg?style=flat)
+# MirrorTV Logo
 
-## Feature - MirrorMedia 鏡 LOGO
+## Feature
 
-- 可依據傳入的數值調整寬度，高度則會依比例自動進行調整。
-- 可依據傳入的數值調整 LOGO 顏色，預設值為"#ffffff"(白色）。
-- 可傳入 onClick Function，根據不同頁面需求設置 GA Click Event。
+- 元件功能
 
-## How to Use This Pkg?
+  - 點擊按鈕可另開頁面至 [鏡週刊 首頁](https://www.mirrormedia.mg/)。
+  - 可傳入 `color`，調整 LOGO 顏色。
+  - 使用預設的 className : `.mirrortv-logo` 調整 LOGO 尺寸或樣式，或傳入自定義的 className，並以該 className 進行調整。
+  - 可傳入 `onClick` function，設定按鈕點擊後所觸發的函式。( 可利用此 props 設定 GA Event )
 
-1. Install the npm [package](https://www.npmjs.com/package/@readr-media/react-icon)
-   `yarn add @readr-media/react-icon`
+![Mirrortv Logo](https://github.com/ChangRongXuan/Portfolio/blob/main/imgs/mirrortv.svg)
+
+## How to Use This React Component ?
+
+1. Install the npm [package](https://www.npmjs.com/package/@readr-media/mirrormedia-project)
+   `yarn add @readr-media/mirrormedia-project`
 2. Import component in the desired place
 
 ```
-import { MirrorIcon } from '@readr-media/react-icon'
+import styled from 'styled-components'
+import { MirrorTVLogo } from '@readr-media/mirrormedia-project'
 
-export default function SomeComponent() {
+const Container = styled.div`
 
-  function GAClickEvent() {
-     console.log('點擊MirrorMedia LOGO')
+  //adjust style by passing `className` props
+  .custom-name {
+     width: 50px;
+     margin: 10px 20px;
   }
+`
 
+const ClickLogo = () => {
+  console.log('click logo')
+}
+
+export default function ComponentName() {
   return (
-    <div>
-      <MirrorIcon
-        width={100}
-        color={red}
-        onClick={GAClickEvent} />
-    </div>
+    <Container>
+      <MirrorTVLogo
+       color="white"
+       className="custom-name"
+       onClick={ClickLogo}
+      />
+    </Container >
   )
 }
 ```
 
 ## Props
 
-| 名稱 | 資料型別 | 必須 | 預設值 | 說明 |
-| ------------ | -------- | ---- | ---------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- | --- | |
-| color | String | | `"#ffffff"` | LOGO 顏色 | |
-| width | String | Number | | `""` | LOGO 寬度 |
-| onClick | MouseEventHandler | | `""` | 點擊 LOGO 後會觸發的 Function Event |
-
-## Installation
-
-`yarn install`
-
-## Development
-
-```
-$ yarn dev
-// or
-$ npm run dev
-// or
-$ make dev
-```
-
-## Build (Webpack Bundles and ES5 Transpiling)
-
-```
-$ npm run build
-// or
-$ make build
-```
-
-### Build Webpack Bundles
-
-```
-$ make build-dist
-```
-
-### Transpile React, ES6 Codes to ES5
-
-```
-$ make build-lib
-```
-
-### NPM Publish
-
-After executing `Build` scripts, we will have `./dist` and `/lib` folders,
-and then we can execute publish command,
-
-```
-npm publish
-```
-
-Note: before publish npm package, we need to bump the package version first.
+| 名稱      | 資料型別          | 必須 | 預設值             | 說明                                                                                          |
+| --------- | ----------------- | ---- | ------------------ | --------------------------------------------------------------------------------------------- |
+| color     | String            |      | ' '                | 設定 LOGO 顏色。                                                                              |
+| className | String            |      | `mirrortv-logo` | 自訂 className。如無傳入自訂義 className，仍可透過 `.mirrortv-logo` 更改 LOGO 樣式或尺寸。 |
+| onClick   | MouseEventHandler |      | ' '                | 點擊 LOGO 後觸發之函式。                                                                      |
 
 ## TODOs
 

@@ -5,8 +5,13 @@ import { MirrorMediaIcon } from './react-components/icon'
 const Logo = styled.a`
   display: inline-block;
   width: 63px;
-  height: auto;
   cursor: pointer;
+
+  svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
 
   @media (min-width: 768px) {
     width: 90.7px;

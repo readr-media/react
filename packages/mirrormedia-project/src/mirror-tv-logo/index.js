@@ -3,16 +3,23 @@ import styled from 'styled-components'
 import { MirrorTVIcon } from './react-components/icon'
 
 const Logo = styled.a`
+  display: flex;
+  align-items: center;
   display: inline-block;
   width: 80px;
-  height: auto;
   cursor: pointer;
+
+  svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
 
   @media (min-width: 768px) {
     width: 82px;
   }
 
-  @media (min-width: 768px) {
+  @media (min-width: 1200px) {
     width: 128px;
   }
 `
