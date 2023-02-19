@@ -81,6 +81,29 @@ const IconWrapper = styled.div`
   }
 `
 
+/**
+ * @param {Object} props
+ * @param {boolean} [props.show]
+ * - toggle status.
+ * - default value is `'false'`.
+ * @param {string} [props.size]
+ * - size of button.
+ * - optional, default value is `''`.
+ * @param {string} [props.direction]
+ * - toggle direction.
+ * - optional, default value is `'vertical'`.
+ * @param {import("react").MouseEventHandler} [props.FbClick]
+ * - FB-icon onClick function.
+ * - optional, default value is {()=> void}.
+ * @param {import("react").MouseEventHandler} [props.LineClick]
+ * - Line-icon onClick function.
+ * - optional, default value is {()=> void}.
+ * @param {import("react").MouseEventHandler} [props.LinkClick]
+ * - Link-icon onClick function.
+ * - optional, default value is {()=> void}.
+ * @returns {JSX.Element}
+ */
+
 export default function SocialIcon({
   show,
   size,

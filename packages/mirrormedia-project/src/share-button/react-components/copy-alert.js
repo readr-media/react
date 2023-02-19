@@ -53,6 +53,12 @@ const CopyAlert = styled.div`
   }
 `
 
+/**
+ * @param {Object} props
+ * @param {boolean} [props.showAlert]
+ * @returns {JSX.Element}
+ */
+
 export default function Alert({ showAlert }) {
   return (
     <CopyAlert>

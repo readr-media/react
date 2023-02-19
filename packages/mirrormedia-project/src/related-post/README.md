@@ -14,7 +14,7 @@
   - 使用者可傳入 `defaultImage`。當文章圖片無法正常顯示時，會改為顯示此 `defaultImage`。
   - 使用預設的 className : `.related-post-title`, `.related-post-caption` 調整標題/文章標題樣式，或傳入自訂 className，並以該 className 進行調整。
 
-![Related Post](https://github.com/ChangRongXuan/react/blob/read-more/packages/related-post/related-post-example.png)
+![Related Post](https://github.com/ChangRongXuan/Portfolio/blob/main/imgs/related-post-example.png)
 
 ## How to Use This Pkg as React Component ?
 
