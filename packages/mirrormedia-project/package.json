@@ -1,5 +1,5 @@
 {
-  "name": "@readr-media/related-post",
+  "name": "@readr-media/mirrormedia-project",
   "version": "1.0.0",
   "description": "",
   "main": "lib/index.js",
@@ -13,12 +13,14 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/readr-media/react.git",
-    "directory": "packages/related-post"
+    "directory": "packages/mirrormedia-project"
   },
   "keywords": [
     "react",
     "mirrormedia",
-    "related"
+    "icon",
+    "share-button",
+    "related-post"
   ],
   "license": "MIT",
   "peerDependencies": {
@@ -27,6 +29,7 @@
     "styled-components": "5.3.5"
   },
   "files": [
-    "lib"
+    "lib",
+    "CHANGELOG.md"
   ]
 }

@@ -1,6 +1,6 @@
 import React from 'react' // eslint-disable-line
 import styled from 'styled-components'
-import RelatedList from './related-list'
+import RelatedList from './react-components/related-list'
 
 const Container = styled.div`
   width: 100%;

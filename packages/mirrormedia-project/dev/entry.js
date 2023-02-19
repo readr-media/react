@@ -1,6 +1,6 @@
 import React from 'react' // eslint-disable-line
 import { createRoot } from 'react-dom/client'
-import RelatedPost from '../src'
+import { RelatedPost, ShareButton, MirrorMediaLogo, MirrorTVLogo } from '../src'
 import styled from 'styled-components'
 
 const reactRootId = 'root'
@@ -49,6 +49,9 @@ const Container = styled.div`
 
 root.render(
   <Container>
+    <MirrorTVLogo color="red" />
+    <MirrorMediaLogo />
+    <ShareButton direction="vertical" />
     <RelatedPost
       relatedData={mockData}
       title="相關文章"
