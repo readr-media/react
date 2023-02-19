@@ -14,10 +14,16 @@ const Container = styled.div`
 
   @media (min-width: 768px) {
     > ul {
-      max-width: 640px;
+      max-width: 600px;
       display: flex;
       flex-wrap: wrap;
       justify-content: space-between;
+    }
+  }
+
+  @media (min-width: 1200px) {
+    > ul {
+      max-width: 640px;
     }
   }
 `
@@ -56,10 +62,6 @@ const Title = styled.p`
  * @param {string} [props.defaultImage]
  * - default image, it will show if `relatedData.imageUrl` can not be loaded
  * - optional, default value is `""`.
- * @param {boolean} [props.debugMode]
- * - can set if is in debug mode
- * - if `true`, then will print log of error.
- * - optional, default value is `false`.
  * @returns {JSX.Element}
  */
 
@@ -69,37 +71,38 @@ export default function RelatedPost({
   titleClassName = 'related-post-title',
   captionClassName = 'related-post-caption',
   defaultImage = '',
-  debugMode = false,
 }) {
-  try {
-    //check whether `relatedData` is empty.
-    //if `relatedData` is empty, show error message.
-    if (relatedData?.length === 0 && debugMode) {
-      console.log(`ERROR: props.relatedData has no data`)
+  function isDataEmpty(data) {
+    try {
+      if (!data?.length)
+        throw `Error: The 'relatedData' array is empty or undefined.`
+      if (
+        !data?.every(
+          (obj) => obj.hasOwnProperty('caption') && obj['caption'] !== ''
+        )
+      )
+        throw `Error: Not all objects in 'relatedData' have the key 'caption'`
+    } catch (err) {
+      console.log(err)
     }
 
-    //check each Object in `relatedData` has `caption`.
-    //if some Object in `relatedData` lose `caption`, show error message.
-    const checkEmptyCaption = (element) => element.caption !== undefined
-    if (relatedData?.every(checkEmptyCaption) && debugMode) {
-      console.log(`ERROR: caption has no data`)
-    }
-  } catch (err) {
-    console.log(err)
+    return data?.length !== 0
   }
 
   return (
-    <Container>
-      <Title className={titleClassName}>{title}</Title>
-      {relatedData?.length !== 0 && (
-        <ul className="related-post-box">
-          <RelatedList
-            relatedData={relatedData}
-            captionClassName={captionClassName}
-            defaultImage={defaultImage}
-          />
-        </ul>
+    <>
+      {isDataEmpty(relatedData) && (
+        <Container>
+          <Title className={titleClassName}>{title}</Title>
+          <ul className="related-post-box">
+            <RelatedList
+              relatedData={relatedData}
+              captionClassName={captionClassName}
+              defaultImage={defaultImage}
+            />
+          </ul>
+        </Container>
       )}
-    </Container>
+    </>
   )
 }
