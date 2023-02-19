@@ -74,7 +74,6 @@ root.render(
       title="相關文章"
       titleClassName="title"
       captionClassName="caption"
-      debugMode={true}
     />
   </Container>
 )

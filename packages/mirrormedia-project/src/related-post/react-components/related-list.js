@@ -42,6 +42,13 @@ const ImgBlock = styled.div`
      *  @param {number} props.postAmount
      */ (props) => (props.postAmount === 1 ? '394px' : '184px')};
   }
+
+  @media (min-width: 1200px) {
+    height: ${/**
+     *  @param {Object} props
+     *  @param {number} props.postAmount
+     */ (props) => (props.postAmount === 1 ? '420px' : '184px')};
+  }
 `
 
 const PostCaption = styled.div`
@@ -64,14 +71,14 @@ const PostCaption = styled.div`
 // if `props.defaultImage` occur error, show `<DefaultImage>`.
 /**
  * @param {string} imgSrc
- * @param {string} postAmount
+ * @param {number} postAmount
  * @param {string} alt
  * @returns {JSX.Element}
  */
 function RelatedPostImage({ imgSrc, postAmount, alt }) {
   const [errored, setErrored] = useState(false)
   return (
-    <ImgBlock amount={postAmount}>
+    <ImgBlock postAmount={postAmount}>
       {imgSrc && !errored ? (
         <img src={imgSrc} onError={() => setErrored(true)} alt={alt} />
       ) : (
@@ -90,14 +97,10 @@ function RelatedPostImage({ imgSrc, postAmount, alt }) {
  * - required.
  * @param {string} [props.captionClassName]
  * - className of caption.
- * - optional, default value is `""`.
+ * - optional, default value is `"related-post-caption"`.
  * @param {string} [props.defaultImage]
  * - default image, it will show if `relatedData.imageUrl` can not be loaded
  * - optional, default value is `""`.
- * @param {boolean} [props.debugMode]
- * - can set if is in debug mode
- * - if `true`, then will print log of error.
- * - optional, default value is `false`.
  * @returns {JSX.Element}
  */
 export default function RelatedList({
