@@ -10,7 +10,8 @@
     "build": "make build",
     "clean": "make clean",
     "build-lib": "make build-lib",
-    "build-type": "tsc"
+    "build-type": "tsc",
+    "postinstall": "make build-lib"
   },
   "repository": {
     "type": "git",
