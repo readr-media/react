@@ -52,7 +52,7 @@
     "@babel/eslint-parser": "^7.11.4",
     "@babel/preset-env": "^7.17.12",
     "@babel/preset-react": "^7.17.12",
-    "@readr-media/react-embed-code-generator": "2.4.3-alpha.8",
+    "@readr-media/react-embed-code-generator": "2.4.3-alpha.15",
     "@svgr/webpack": "^6.2.1",
     "babel-eslint": "^10.1.0",
     "babel-loader": "^8.2.5",
