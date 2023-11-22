@@ -16,7 +16,8 @@
     "packages/dropping-text",
     "packages/react-theatre",
     "packages/timeline",
-    "packages/react-360"
+    "packages/react-360",
+    "packages/embed-code-generator"
   ],
   "scripts": {
     "prepare": "husky install"
