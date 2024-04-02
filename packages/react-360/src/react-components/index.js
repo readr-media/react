@@ -167,7 +167,7 @@ export default function React360({
                 config.pitch 的值 (初始畫面會設定為該點的 pitch 值)
               </li>
               <li>
-                yaw: 設定畫面初始上下的角度，可比照熱點設定方式取得yaw值來修改
+                yaw: 設定畫面初始左右的角度，可比照熱點設定方式取得yaw值來修改
                 config.yaw 的值 (初始畫面會設定為該點的 yaw 值)
               </li>
               <li>
