@@ -1175,10 +1175,18 @@
     styled-components "5.3.5"
     video.js "7.18.1"
 
-"@readr-media/react-360@0.4.2-beta.2":
-  version "0.4.2-beta.2"
-  resolved "https://registry.yarnpkg.com/@readr-media/react-360/-/react-360-0.4.2-beta.2.tgz#c55e0bb1857187636909ade5ef27a24582d81cb0"
-  integrity sha512-fcXKohf7VTC2zIxr+w02YhBtCLVzsTLcktYaGiar8nltEw+tCvjFEDtAJPKuGyKqDjEouc3VV5tvqmkOMxsjqg==
+"@readr-media/react-360@0.4.2-beta.3":
+  version "0.4.2-beta.3"
+  resolved "https://registry.yarnpkg.com/@readr-media/react-360/-/react-360-0.4.2-beta.3.tgz#6ecfc5382e4dfe7c22d8e85b432520b9144aee0b"
+  integrity sha512-ym68cc53Z+lQbUSzO1Xu/bX5SxsSnto7Ddj9oThZO80/+z2ltMgA1SlVHZixV3pUr8z5FPa40zwWF95r9efGyw==
+  dependencies:
+    "@readr-media/pannellum-react" "^1.4.4"
+    react-lottie "^1.2.3"
+
+"@readr-media/react-360@0.4.2-beta.4":
+  version "0.4.2-beta.4"
+  resolved "https://registry.yarnpkg.com/@readr-media/react-360/-/react-360-0.4.2-beta.4.tgz#4f6701f0cdb8846741a72de97a191c006ea4c1e4"
+  integrity sha512-MO7Oruj37sc4ZeoRETqB1GDrhQtOMzQd+XNqlLrwgqv+a3BsD3bodgQ4HH5z0/pxR/Z+mdg4KhfPwthqDRNb5g==
   dependencies:
     "@readr-media/pannellum-react" "^1.4.4"
     react-lottie "^1.2.3"
@@ -1207,12 +1215,12 @@
     "@twreporter/errors" "^1.1.1"
     axios "^0.27.2"
 
-"@readr-media/react-embed-code-generator@2.4.3-alpha.23":
-  version "2.4.3-alpha.23"
-  resolved "https://registry.yarnpkg.com/@readr-media/react-embed-code-generator/-/react-embed-code-generator-2.4.3-alpha.23.tgz#69a16e1f8e503fe64835aeff5ec13120a3805940"
-  integrity sha512-VbdID0xD44r2csQR0Sj3lqHBmScQjEx4/uW65dgRtkZY73DA9LOiawl1U6feuIPRe6bocOcY25tINkXd9Pkhow==
+"@readr-media/react-embed-code-generator@2.4.3-alpha.24":
+  version "2.4.3-alpha.24"
+  resolved "https://registry.yarnpkg.com/@readr-media/react-embed-code-generator/-/react-embed-code-generator-2.4.3-alpha.24.tgz#85df3bb4d17e82bde497eeb6e0dbc1c8f0615287"
+  integrity sha512-OpXY4rWDl3zhC0FNP8VUQHI+xee49CGSLC2PValrMjusqahTKyVVY3uAD5zs7n1fP8IvFXp4T1JinV8eg5h5NQ==
   dependencies:
-    "@readr-media/react-360" "0.4.2-beta.2"
+    "@readr-media/react-360" "0.4.2-beta.3"
     "@readr-media/react-dropping-text" "1.0.9"
     "@readr-media/react-dual-slides" "^1.1.0"
     "@readr-media/react-election-widgets" "1.1.5"
