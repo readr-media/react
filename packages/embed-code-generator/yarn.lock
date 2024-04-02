@@ -1167,20 +1167,28 @@
   resolved "https://registry.yarnpkg.com/@polka/url/-/url-1.0.0-next.21.tgz#5de5a2385a35309427f6011992b544514d559aa1"
   integrity sha512-a5Sab1C4/icpTZVzZc5Ghpz88yQtGOyNqYXcZgOssB2uuAr+wF/MvN6bgtW32q7HHrvBki+BsZ0OuNv6EV3K9g==
 
-"@readr-media/pannellum-react@^1.4.2":
-  version "1.4.2"
-  resolved "https://registry.yarnpkg.com/@readr-media/pannellum-react/-/pannellum-react-1.4.2.tgz#c185f8890f6a5e93ced3e9a8caa1d00ea7171d44"
-  integrity sha512-t9Kl1yF4KrYEym18a6hRHxeZ+h276B1s5xWumuBpbZgZj1TRctLPjFpYboCPqc5gdKGe+AD8YzukiDMpYi183A==
+"@readr-media/pannellum-react@^1.4.4":
+  version "1.4.4"
+  resolved "https://registry.yarnpkg.com/@readr-media/pannellum-react/-/pannellum-react-1.4.4.tgz#914e119f3a1a7ef4b3c32483577de725bf380e92"
+  integrity sha512-BpkjcA8cIJtCm21duCmVfpl6qUSY+2jrzCHLucTNDaOjIhdTC+HeB+j6uh3BvGRmYaw8p/xcPCvNbWQPkGOx6Q==
   dependencies:
     styled-components "5.3.5"
     video.js "7.18.1"
 
-"@readr-media/react-360@0.4.1-beta.1":
-  version "0.4.1-beta.1"
-  resolved "https://registry.yarnpkg.com/@readr-media/react-360/-/react-360-0.4.1-beta.1.tgz#79b9fdaba159119ce451d199c43bd76c361333de"
-  integrity sha512-y7vHuJ9dIvmVA6gpnVU+wTp7jEgp2K08qD8KZoHm906INfEDAj25GTGU2W2+GdYQYjiBrP96NvhjAsGFOv+Bvg==
+"@readr-media/react-360@0.4.2-beta.3":
+  version "0.4.2-beta.3"
+  resolved "https://registry.yarnpkg.com/@readr-media/react-360/-/react-360-0.4.2-beta.3.tgz#6ecfc5382e4dfe7c22d8e85b432520b9144aee0b"
+  integrity sha512-ym68cc53Z+lQbUSzO1Xu/bX5SxsSnto7Ddj9oThZO80/+z2ltMgA1SlVHZixV3pUr8z5FPa40zwWF95r9efGyw==
   dependencies:
-    "@readr-media/pannellum-react" "^1.4.2"
+    "@readr-media/pannellum-react" "^1.4.4"
+    react-lottie "^1.2.3"
+
+"@readr-media/react-360@0.4.2-beta.4":
+  version "0.4.2-beta.4"
+  resolved "https://registry.yarnpkg.com/@readr-media/react-360/-/react-360-0.4.2-beta.4.tgz#4f6701f0cdb8846741a72de97a191c006ea4c1e4"
+  integrity sha512-MO7Oruj37sc4ZeoRETqB1GDrhQtOMzQd+XNqlLrwgqv+a3BsD3bodgQ4HH5z0/pxR/Z+mdg4KhfPwthqDRNb5g==
+  dependencies:
+    "@readr-media/pannellum-react" "^1.4.4"
     react-lottie "^1.2.3"
 
 "@readr-media/react-dropping-text@1.0.9":
@@ -1207,12 +1215,12 @@
     "@twreporter/errors" "^1.1.1"
     axios "^0.27.2"
 
-"@readr-media/react-embed-code-generator@2.4.3-alpha.17":
-  version "2.4.3-alpha.17"
-  resolved "https://registry.yarnpkg.com/@readr-media/react-embed-code-generator/-/react-embed-code-generator-2.4.3-alpha.17.tgz#e1a4f38a237ba09168749ec189757154e074c138"
-  integrity sha512-b4R8okkOeg/tQJkPMGVCfCBGUFNr9lvjyS8urNyGzQpimdCc8RmjUzUp7ID/QsQ0g1psy6Fk57eA3jHpyggftw==
+"@readr-media/react-embed-code-generator@2.4.3-alpha.24":
+  version "2.4.3-alpha.24"
+  resolved "https://registry.yarnpkg.com/@readr-media/react-embed-code-generator/-/react-embed-code-generator-2.4.3-alpha.24.tgz#85df3bb4d17e82bde497eeb6e0dbc1c8f0615287"
+  integrity sha512-OpXY4rWDl3zhC0FNP8VUQHI+xee49CGSLC2PValrMjusqahTKyVVY3uAD5zs7n1fP8IvFXp4T1JinV8eg5h5NQ==
   dependencies:
-    "@readr-media/react-360" "0.4.1-beta.1"
+    "@readr-media/react-360" "0.4.2-beta.3"
     "@readr-media/react-dropping-text" "1.0.9"
     "@readr-media/react-dual-slides" "^1.1.0"
     "@readr-media/react-election-widgets" "1.1.5"
@@ -1223,7 +1231,7 @@
     "@readr-media/react-qa-list" "2.0.1"
     "@readr-media/react-questionnaire" "2.0.0"
     "@readr-media/react-random-text-selector" "^1.0.2"
-    "@readr-media/react-theatre" "^1.3.0"
+    "@readr-media/react-theatre" "^1.4.0-alpha.4"
     "@readr-media/react-three-story-points" "1.0.2"
     "@readr-media/react-timeline" "1.1.0-alpha.1"
     lodash "^4.17.21"
@@ -1305,16 +1313,6 @@
   integrity sha512-SfHVRM47xVuyIEzBF0vg7NTOsRbDPkx14mbDTVmEjBDrlhB/aXvrvonUg6E8VJWYjqrK/PjqrhGYiQTgPt37Ng==
   dependencies:
     axios "^1.3.5"
-
-"@readr-media/react-theatre@^1.3.0":
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/@readr-media/react-theatre/-/react-theatre-1.3.0.tgz#61f549d6568e6e2447090c36be91a36c9aeea9a8"
-  integrity sha512-W3eqVXKlyyo6ZCsg+Xn8zAGTddzBAnRgD1Ri6kgIA+Xa23kyfyVq/h3DlPhcMKOhfl34P1ia/0oZbwSVmjbhOA==
-  dependencies:
-    "@theatre/core" "0.6.1"
-    react-transition-group "^4.4.5"
-    url "^0.11.1"
-    uuid "^9.0.0"
 
 "@readr-media/react-theatre@^1.4.0-alpha.4":
   version "1.4.0-alpha.4"
