@@ -48,6 +48,7 @@ export default function CustomImage({
     threshold: 0.25,
   },
   className = '',
+  imageProps = {},
 }) {
   const imageRef = useRef(null)
   const [imageSrc, setImageSrc] = useState(
@@ -456,6 +457,7 @@ export default function CustomImage({
       src={imageSrc}
       alt={alt}
       rel={priority ? 'preload' : ''}
+      {...imageProps}
     ></img>
   )
 }
