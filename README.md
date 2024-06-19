@@ -10,6 +10,16 @@ This is a monorepo containing sub-packages that can be used across any projects 
 - [@readr-media/react-karaoke](https://www.npmjs.com/package/@readr-media/react-karaoke): see [`packages/karaoke`](./packages/karaoke)
 - [@readr-media/react-live-blog](https://www.npmjs.com/package/@readr-media/react-live-blog): see [`packages/live-blog`](./packages/live-blog)
 - [@readr-media/share-button](https://www.npmjs.com/package/@readr-media/share-button): see [`packages/share-button`](./packages/share-button)
+- [@readr-media/react-dropping-text](https://www.npmjs.com/package/@readr-media/react-dropping-text): see [`packages/dropping-text`](./packages/dropping-text)
+- [@readr-media/react-dual-slides](https://www.npmjs.com/package/@readr-media/react-dual-slides): see [`packages/dual-slides`](./packages/dual-slides)
+- [@readr-media/react-full-screen-video](https://www.npmjs.com/package/@readr-media/react-full-screen-video): see [`packages/full-screen-video`](./packages/full-screen-video)
+- [@readr-media/react-infinite-scroll-list](https://www.npmjs.com/package/@readr-media/react-infinite-scroll-list): see [`packages/infinite-scroll-list`](./packages/infinite-scroll-list)
+- [@readr-media/react-360](https://www.npmjs.com/package/@readr-media/react-360): see [`packages/react-360`](./packages/react-360)
+- [@readr-media/react-random-text-selector](https://www.npmjs.com/package/@readr-media/react-random-text-selector): see [`packages/react-random-text-selector`](./packages/react-random-text-selector)
+- [@readr-media/react-theatre](https://www.npmjs.com/package/@readr-media/react-theatre): see [`packages/theatre`](./packages/theatre)
+- [@readr-media/react-three-story-points](https://www.npmjs.com/package/@readr-media/react-three-story-points): see [`packages/three-story-points`](./packages/three-story-points)
+- [@readr-media/react-timeline](https://www.npmjs.com/package/@readr-media/react-timeline): see [`packages/timeline`](./packages/timeline)
+
 
 ### Development
 Before modifying sub-packages' source codes, make sure you install dependencies on root first.  
