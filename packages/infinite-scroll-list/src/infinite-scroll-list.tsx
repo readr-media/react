@@ -40,7 +40,6 @@ export default function InfiniteScrollList<T>({
 }: Props<T>) {
   const [renderSize, setRenderSize] = useState(pageSize)
   const [dataList, setDataList] = useState([...initialList])
-  const customTriggerRef = useRef<HTMLElement>(null)
 
   // In strict mode, we need to monitor changes from upstream
   useEffect(() => {
@@ -135,7 +134,7 @@ export default function InfiniteScrollList<T>({
     hasNotFetchedData,
   ])
 
-  const loaderRef = useRef<HTMLDivElement>(null)
+  const triggerRef = useRef<HTMLElement>(null)
 
   useEffect(() => {
     const callback: IntersectionObserverCallback = (entries, observer) => {
@@ -164,32 +163,23 @@ export default function InfiniteScrollList<T>({
       threshold: 0,
     })
 
-    const loaderElement = loaderRef.current
-    const triggerElement = customTriggerRef.current
+    const triggerElement = triggerRef.current
 
-    if (hasCustomTrigger) {
-      if (triggerElement) {
+    if (triggerElement) {
+      if (isAutoFetch) {
         observer.observe(triggerElement)
-      }
-    } else {
-      if (loaderElement) {
-        if (isAutoFetch) {
-          observer.observe(loaderRef.current)
-        } else {
-          loaderElement.addEventListener('click', clickHandler)
-        }
+      } else if (!hasCustomTrigger) {
+        // only default trigger supports manully load more
+        triggerElement.addEventListener('click', clickHandler)
       }
     }
 
     return () => {
-      if (hasCustomTrigger) {
-        observer.disconnect()
-      } else {
+      if (triggerElement) {
         if (isAutoFetch) {
           observer.disconnect()
-        } else {
-          if (loaderElement)
-            loaderElement.removeEventListener('click', clickHandler)
+        } else if (!hasCustomTrigger) {
+          triggerElement.removeEventListener('click', clickHandler)
         }
       }
     }
@@ -197,8 +187,16 @@ export default function InfiniteScrollList<T>({
 
   return (
     <>
-      {children(renderList, customTriggerRef)}
-      <div ref={loaderRef}>{hasNotRenderedData && loader}</div>
+      {children(renderList, hasCustomTrigger ? triggerRef : undefined)}
+      <div
+        ref={
+          !hasCustomTrigger
+            ? (triggerRef as React.RefObject<HTMLDivElement>)
+            : undefined
+        }
+      >
+        {hasNotRenderedData && loader}
+      </div>
     </>
   )
 }

@@ -148,7 +148,7 @@ export default function CustomTriggerExample() {
     >
       {(dataList: UserData[], customTriggerRef) =>
         dataList.map((data, i) => {
-          const setRef = i === dataList.length - 5
+          const setRef = customTriggerRef && i === dataList.length - 5
           return (
             <section
               key={`${data.name.first} ${data.name.last}`}
