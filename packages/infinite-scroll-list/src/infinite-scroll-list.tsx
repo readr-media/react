@@ -14,9 +14,14 @@ type Props<T> = {
   /** The function to fetch more data, which will be executed when page is scrolled to bottom */
   fetchListInPage: (page: number) => Promise<T[]>
   /** The function to render data list */
-  children: (renderList: T[]) => ReactNode
+  children: (
+    renderList: T[],
+    customTriggerRef?: React.RefObject<HTMLElement>
+  ) => ReactNode
   /** The loader element to display during data loading */
   loader?: ReactNode
+  /** Wether the custom trigger ref will provided throught children callback to set up trigger point */
+  customTrigger?: boolean
 }
 
 /**
@@ -31,9 +36,11 @@ export default function InfiniteScrollList<T>({
   fetchListInPage,
   children,
   loader,
+  customTrigger = false,
 }: Props<T>) {
   const [renderSize, setRenderSize] = useState(pageSize)
   const [dataList, setDataList] = useState([...initialList])
+  const customTriggerRef = useRef<HTMLElement>(null)
 
   // In strict mode, we need to monitor changes from upstream
   useEffect(() => {
@@ -158,28 +165,39 @@ export default function InfiniteScrollList<T>({
     })
 
     const loaderElement = loaderRef.current
+    const triggerElement = customTriggerRef.current
 
-    if (loaderElement) {
-      if (isAutoFetch) {
-        observer.observe(loaderRef.current)
-      } else {
-        loaderElement.addEventListener('click', clickHandler)
+    if (customTrigger) {
+      if (triggerElement) {
+        observer.observe(triggerElement)
+      }
+    } else {
+      if (loaderElement) {
+        if (isAutoFetch) {
+          observer.observe(loaderRef.current)
+        } else {
+          loaderElement.addEventListener('click', clickHandler)
+        }
       }
     }
 
     return () => {
-      if (isAutoFetch) {
+      if (customTrigger) {
         observer.disconnect()
       } else {
-        if (loaderElement)
-          loaderElement.removeEventListener('click', clickHandler)
+        if (isAutoFetch) {
+          observer.disconnect()
+        } else {
+          if (loaderElement)
+            loaderElement.removeEventListener('click', clickHandler)
+        }
       }
     }
-  }, [handleLoadMore, isAutoFetch, hasNotRenderedData])
+  }, [handleLoadMore, isAutoFetch, hasNotRenderedData, customTrigger])
 
   return (
     <>
-      {children(renderList)}
+      {children(renderList, customTriggerRef)}
       <div ref={loaderRef}>{hasNotRenderedData && loader}</div>
     </>
   )
