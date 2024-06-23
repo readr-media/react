@@ -1,6 +1,22 @@
 import { useState } from 'react'
 import NormalExample from './components/normal-example'
 import CustomTriggerExample from './components/custom-trigger-example'
+import styled from 'styled-components'
+
+type ButtonProps = {
+  isActive: boolean
+}
+
+const Button = styled.button<ButtonProps>`
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  &:hover,
+  &:active {
+    background: white;
+  }
+  ${({ isActive }) => isActive && `background: white`}
+`
 
 enum ExampleType {
   Normal = 'normal',
@@ -37,19 +53,15 @@ export default function App() {
       >
         {Object.entries(ExampleType).map(([key, type]) => {
           return (
-            <button
+            <Button
               key={key}
-              style={{
-                padding: '10px 20px',
-                borderRadius: '5px',
-                cursor: 'pointer',
-              }}
               onClick={() => {
                 setExampleType(type)
               }}
+              isActive={type === exampleType}
             >
               {key}
-            </button>
+            </Button>
           )
         })}
       </div>

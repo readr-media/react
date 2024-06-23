@@ -33,5 +33,8 @@
     "dist",
     "CHANGELOG.md"
   ],
-  "dependencies": {}
+  "dependencies": {},
+  "devDependencies": {
+    "styled-components": "^6.1.11"
+  }
 }
