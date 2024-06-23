@@ -21,7 +21,7 @@ type Props<T> = {
   /** The loader element to display during data loading */
   loader?: ReactNode
   /** Wether the custom trigger ref will provided throught children callback to set up trigger point */
-  customTrigger?: boolean
+  hasCustomTrigger?: boolean
 }
 
 /**
@@ -36,7 +36,7 @@ export default function InfiniteScrollList<T>({
   fetchListInPage,
   children,
   loader,
-  customTrigger = false,
+  hasCustomTrigger = false,
 }: Props<T>) {
   const [renderSize, setRenderSize] = useState(pageSize)
   const [dataList, setDataList] = useState([...initialList])
@@ -167,7 +167,7 @@ export default function InfiniteScrollList<T>({
     const loaderElement = loaderRef.current
     const triggerElement = customTriggerRef.current
 
-    if (customTrigger) {
+    if (hasCustomTrigger) {
       if (triggerElement) {
         observer.observe(triggerElement)
       }
@@ -182,7 +182,7 @@ export default function InfiniteScrollList<T>({
     }
 
     return () => {
-      if (customTrigger) {
+      if (hasCustomTrigger) {
         observer.disconnect()
       } else {
         if (isAutoFetch) {
@@ -193,7 +193,7 @@ export default function InfiniteScrollList<T>({
         }
       }
     }
-  }, [handleLoadMore, isAutoFetch, hasNotRenderedData, customTrigger])
+  }, [handleLoadMore, isAutoFetch, hasNotRenderedData, hasCustomTrigger])
 
   return (
     <>

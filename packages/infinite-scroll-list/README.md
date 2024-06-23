@@ -16,7 +16,7 @@ The component progressively fetches data when page being scrolled to bottom and 
 | fetchListInPage | `(page: number) => Promise<T[]>` [1](#type-t) | `true` | The function to fetch more data, which will be executed when page is scrolled to bottom |
 | children | `(renderList: T[], customTriggerRef?: React.RefObject<HTMLElement>) => ReactNode` [1](#type-t) | `true` | The function to render data list |
 | loader | `ReactNode` | `false` | The loader element to be displayed during data loading |
-| customTrigger | `boolean` | `false` | Wether the custom trigger ref will provided throught children callback to set up trigger point | 
+| hasCustomTrigger | `boolean` | `false` | Wether the custom trigger ref will be provided throught children callback to set up trigger point | 
 
 ### What is T
 T is generic type for data coming from fetches (`fetchListInPage`) or to be used by render function (`children`).
@@ -45,10 +45,10 @@ You should ensurce T in `initialList`, `fetchListInPage` and `children` that rep
   2. amount of items reached `Math.min(amountOfElements, pageAmount * pageSize)`
 
 ### Trigger loadmore
-- Default (customTrigger: false)
-  - This component will insert a loading `<div/>` to trigger intersection which means it only starts to load more at the end of the showing list
-- Custom Trigger (customTrigger: true)
-  - Set the prop `customTrigger` to `true` and use the `customTriggerRef` as the second param from the `children` callback to set to the desired elemnt as trigger point. (check [custom-trigger-example](./dev/components/custom-trigger-example.tsx))
+- Default (hasCustomTrigger: false)
+  - This component appends an element which triggers load-more effect at the end of the element list by default
+- Custom Trigger (hasCustomTrigger: true)
+  - Set the prop `hasCustomTrigger` to `true` and use the `customTriggerRef` as the second argument from the `children` callback to to designate element as trigger point (check [custom-trigger-example](./dev/components/custom-trigger-example.tsx))
 
 
 ## Development Guide

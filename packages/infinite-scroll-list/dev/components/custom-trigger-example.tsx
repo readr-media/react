@@ -144,7 +144,7 @@ export default function CustomTriggerExample() {
       pageAmount={4}
       pageSize={10}
       fetchListInPage={fetchData}
-      customTrigger={true}
+      hasCustomTrigger={true}
     >
       {(dataList: UserData[], customTriggerRef) =>
         dataList.map((data, i) => {
