@@ -1,4 +1,5 @@
-import { useState } from 'react'
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import React, { useState } from 'react'
 import NormalExample from './components/normal-example'
 import CustomTriggerExample from './components/custom-trigger-example'
 import styled from 'styled-components'
