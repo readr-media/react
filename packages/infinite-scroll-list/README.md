@@ -14,9 +14,9 @@ The component progressively fetches data when page being scrolled to bottom and 
 | pageSize | `number` | `true` | The amount of items per scroll page |
 | isAutoFetch | `boolean` | `false` (default: `true`) | Whether data fetch is executed atomatically |
 | fetchListInPage | `(page: number) => Promise<T[]>` [1](#type-t) | `true` | The function to fetch more data, which will be executed when page is scrolled to bottom |
-| children | `(renderList: T[]) => ReactNode` [1](#type-t) | `true` | The function to render data list |
+| children | `(renderList: T[], customTriggerRef?: React.RefObject<HTMLElement>) => ReactNode` [1](#type-t) | `true` | The function to render data list |
 | loader | `ReactNode` | `false` | The loader element to be displayed during data loading |
-
+| hasCustomTrigger | `boolean` | `false` | Wether the custom trigger ref will be provided throught children callback to set up trigger point | 
 
 ### What is T
 T is generic type for data coming from fetches (`fetchListInPage`) or to be used by render function (`children`).
@@ -43,6 +43,15 @@ You should ensurce T in `initialList`, `fetchListInPage` and `children` that rep
 
   1. no more data
   2. amount of items reached `Math.min(amountOfElements, pageAmount * pageSize)`
+
+### Trigger loadmore
+- Default (hasCustomTrigger: false)
+  - This component appends an element which triggers load-more effect at the end of the element list by default
+- Custom Trigger (hasCustomTrigger: true)
+  - Set the prop `hasCustomTrigger` to `true` and use the `customTriggerRef` as the second argument from the `children` callback to to designate element as trigger point (check [custom-trigger-example](./dev/components/custom-trigger-example.tsx))
+
+#### Note
+The props `hasCustomTrigger` and `isAutoFetch` are in XOR relationship which means that `hasCustomTrigger` can't be set when `isAutoFetch` is set, vice versa.
 
 ## Development Guide
 

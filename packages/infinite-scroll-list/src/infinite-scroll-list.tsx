@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, useCallback, type ReactNode } from 'react'
+import type { XOR } from 'ts-xor'
 
 type Props<T> = {
   /** The initial data list to render */
@@ -9,15 +10,28 @@ type Props<T> = {
   pageAmount?: number
   /** The amount of items per scroll page */
   pageSize: number
-  /** Whether data fetch is executed atomatically */
-  isAutoFetch?: boolean
   /** The function to fetch more data, which will be executed when page is scrolled to bottom */
   fetchListInPage: (page: number) => Promise<T[]>
   /** The function to render data list */
-  children: (renderList: T[]) => ReactNode
+  children: (
+    renderList: T[],
+    customTriggerRef?: React.RefObject<HTMLElement>
+  ) => ReactNode
   /** The loader element to display during data loading */
   loader?: ReactNode
-}
+} & XOR<
+  {
+    /** Manual (click) fetch is not allowed when custom trigger is set  */
+    /** Wether the custom trigger ref will provided throught children callback to set up trigger point */
+    hasCustomTrigger: true
+    /** Whether data fetch is executed atomatically */
+    isAutoFetch?: true
+  },
+  {
+    hasCustomTrigger?: false
+    isAutoFetch?: boolean
+  }
+>
 
 /**
  * This component will progressively fetch data and render theme
@@ -31,6 +45,7 @@ export default function InfiniteScrollList<T>({
   fetchListInPage,
   children,
   loader,
+  hasCustomTrigger = false,
 }: Props<T>) {
   const [renderSize, setRenderSize] = useState(pageSize)
   const [dataList, setDataList] = useState([...initialList])
@@ -128,7 +143,7 @@ export default function InfiniteScrollList<T>({
     hasNotFetchedData,
   ])
 
-  const loaderRef = useRef<HTMLDivElement>(null)
+  const triggerRef = useRef<HTMLElement>(null)
 
   useEffect(() => {
     const callback: IntersectionObserverCallback = (entries, observer) => {
@@ -157,30 +172,40 @@ export default function InfiniteScrollList<T>({
       threshold: 0,
     })
 
-    const loaderElement = loaderRef.current
+    const triggerElement = triggerRef.current
 
-    if (loaderElement) {
+    if (triggerElement) {
       if (isAutoFetch) {
-        observer.observe(loaderRef.current)
-      } else {
-        loaderElement.addEventListener('click', clickHandler)
+        observer.observe(triggerElement)
+      } else if (!hasCustomTrigger) {
+        // only default trigger supports manully load more
+        triggerElement.addEventListener('click', clickHandler)
       }
     }
 
     return () => {
-      if (isAutoFetch) {
-        observer.disconnect()
-      } else {
-        if (loaderElement)
-          loaderElement.removeEventListener('click', clickHandler)
+      if (triggerElement) {
+        if (isAutoFetch) {
+          observer.disconnect()
+        } else if (!hasCustomTrigger) {
+          triggerElement.removeEventListener('click', clickHandler)
+        }
       }
     }
-  }, [handleLoadMore, isAutoFetch, hasNotRenderedData])
+  }, [handleLoadMore, isAutoFetch, hasNotRenderedData, hasCustomTrigger])
 
   return (
     <>
-      {children(renderList)}
-      <div ref={loaderRef}>{hasNotRenderedData && loader}</div>
+      {children(renderList, hasCustomTrigger ? triggerRef : undefined)}
+      <div
+        ref={
+          !hasCustomTrigger
+            ? (triggerRef as React.RefObject<HTMLDivElement>)
+            : undefined
+        }
+      >
+        {hasNotRenderedData && loader}
+      </div>
     </>
   )
 }
