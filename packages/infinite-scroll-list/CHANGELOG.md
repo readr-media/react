@@ -1,5 +1,19 @@
 # @readr-media/react-infinite-scroll-list Changelog
 
+## 2024-06-24, Version 1.1.0
+
+### Notable Changes
+* Add custom trigger 
+
+### Commits
+* \[[`ac56405134`](https://github.com/readr-media/react/commit/ac56405134)] - refactor(infinite-scroll): simply custom-trigger mode and default logic (caesar)
+* \[[`ed41865b73`](https://github.com/readr-media/react/commit/ed41865b73)] - refactor(infinite-scroll): update naming (caesar)
+* \[[`fed01b6c12`](https://github.com/readr-media/react/commit/fed01b6c12)] - refactor(infinite-scroll): improve dev UX (caesar)
+* \[[`f948ab92ab`](https://github.com/readr-media/react/commit/f948ab92ab)] - docs(infinite-scroll): update readme (caesar)
+* \[[`8655f4a25d`](https://github.com/readr-media/react/commit/8655f4a25d)] - refactor(infinite-scroll): update example to show different examples (caesar)
+* \[[`10bec736ac`](https://github.com/readr-media/react/commit/10bec736ac)] - feat(infinite-scroll): add custom trigger (caesar)
+
+
 ## 2024-06-19, Version 1.0.0 
 
 ### Notable Changes
