@@ -1,15 +1,6 @@
 import { useState, useRef, useEffect, useCallback, type ReactNode } from 'react'
 import type { XOR } from 'ts-xor'
 
-type CustomTrigger = {
-  /** Wether the custom trigger ref will provided throught children callback to set up trigger point */
-  hasCustomTrigger: boolean
-}
-type AutoFetch = {
-  /** Whether data fetch is executed atomatically */
-  isAutoFetch: boolean
-}
-
 type Props<T> = {
   /** The initial data list to render */
   initialList?: T[]
@@ -28,7 +19,19 @@ type Props<T> = {
   ) => ReactNode
   /** The loader element to display during data loading */
   loader?: ReactNode
-} & XOR<CustomTrigger, AutoFetch>
+} & XOR<
+  {
+    /** Manual (click) fetch is not allowed when custom trigger is set  */
+    /** Wether the custom trigger ref will provided throught children callback to set up trigger point */
+    hasCustomTrigger: true
+    /** Whether data fetch is executed atomatically */
+    isAutoFetch?: true
+  },
+  {
+    hasCustomTrigger?: false
+    isAutoFetch?: boolean
+  }
+>
 
 /**
  * This component will progressively fetch data and render theme
