@@ -34,7 +34,5 @@
     "CHANGELOG.md"
   ],
   "dependencies": {},
-  "devDependencies": {
-    "styled-components": "^6.1.11"
-  }
+  "devDependencies": {}
 }
