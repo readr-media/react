@@ -50,6 +50,8 @@ You should ensurce T in `initialList`, `fetchListInPage` and `children` that rep
 - Custom Trigger (hasCustomTrigger: true)
   - Set the prop `hasCustomTrigger` to `true` and use the `customTriggerRef` as the second argument from the `children` callback to to designate element as trigger point (check [custom-trigger-example](./dev/components/custom-trigger-example.tsx))
 
+#### Note
+The props `hasCustomTrigger` and `isAutoFetch` are in XOR relationship which means that `hasCustomTrigger` can't be set when `isAutoFetch` is set, vice versa.
 
 ## Development Guide
 

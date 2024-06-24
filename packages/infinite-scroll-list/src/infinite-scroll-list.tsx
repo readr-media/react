@@ -1,4 +1,14 @@
 import { useState, useRef, useEffect, useCallback, type ReactNode } from 'react'
+import type { XOR } from 'ts-xor'
+
+type CustomTrigger = {
+  /** Wether the custom trigger ref will provided throught children callback to set up trigger point */
+  hasCustomTrigger: boolean
+}
+type AutoFetch = {
+  /** Whether data fetch is executed atomatically */
+  isAutoFetch: boolean
+}
 
 type Props<T> = {
   /** The initial data list to render */
@@ -9,8 +19,6 @@ type Props<T> = {
   pageAmount?: number
   /** The amount of items per scroll page */
   pageSize: number
-  /** Whether data fetch is executed atomatically */
-  isAutoFetch?: boolean
   /** The function to fetch more data, which will be executed when page is scrolled to bottom */
   fetchListInPage: (page: number) => Promise<T[]>
   /** The function to render data list */
@@ -20,9 +28,7 @@ type Props<T> = {
   ) => ReactNode
   /** The loader element to display during data loading */
   loader?: ReactNode
-  /** Wether the custom trigger ref will provided throught children callback to set up trigger point */
-  hasCustomTrigger?: boolean
-}
+} & XOR<CustomTrigger, AutoFetch>
 
 /**
  * This component will progressively fetch data and render theme
