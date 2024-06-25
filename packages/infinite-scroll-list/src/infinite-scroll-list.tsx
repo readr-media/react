@@ -50,11 +50,6 @@ export default function InfiniteScrollList<T>({
   const [renderSize, setRenderSize] = useState(pageSize)
   const [dataList, setDataList] = useState([...initialList])
 
-  // In strict mode, we need to monitor changes from upstream
-  useEffect(() => {
-    setDataList(initialList)
-  }, [initialList])
-
   const checkIsMoreData = useCallback(() => {
     if (typeof amountOfElements === 'number' && amountOfElements) {
       return dataList.length < amountOfElements
@@ -109,6 +104,8 @@ export default function InfiniteScrollList<T>({
       return
     }
 
+    const oldRenderSize = renderSize
+
     if (isNotEnoughToRender && hasNotFetchedData) {
       const newPage = fetchedPage.current + 1
       isLoading.current = true
@@ -124,21 +121,28 @@ export default function InfiniteScrollList<T>({
           setDataList(list)
         }
 
+        if (amountOfElements) {
+          setRenderSize(Math.min(oldRenderSize + pageSize, amountOfElements))
+        } else {
+          setRenderSize(Math.min(oldRenderSize + pageSize, list.length))
+        }
+
         fetchedPage.current = newPage
         isLoading.current = false
       })
-    }
-
-    if (amountOfElements) {
-      setRenderSize((pre) => Math.min(pre + pageSize, amountOfElements))
     } else {
-      setRenderSize((pre) => Math.min(pre + pageSize, dataList.length))
+      if (amountOfElements) {
+        setRenderSize(Math.min(oldRenderSize + pageSize, amountOfElements))
+      } else {
+        setRenderSize(Math.min(oldRenderSize + pageSize, dataList.length))
+      }
     }
   }, [
     fetchListInPage,
     dataList,
     amountOfElements,
     pageSize,
+    renderSize,
     isNotEnoughToRender,
     hasNotFetchedData,
   ])
