@@ -1,5 +1,15 @@
 # @readr-media/react-infinite-scroll-list Changelog
 
+## 2024-06-25, Version 1.1.1
+
+### Notable Changes
+* Fix error that occurs after manually triggering load-more effect
+
+### Commits
+* \[[`72f2df3efd`](https://github.com/readr-media/react/commit/72f2df3efd)] - chore(infinite-scroll): bump package version (Tsuki Akiba)
+* \[[`66b0b4f04c`](https://github.com/readr-media/react/commit/66b0b4f04c)] - fix(infinite-scroll): error occurs after manually triggering load-more (Tsuki Akiba)
+* \[[`175b263c46`](https://github.com/readr-media/react/commit/175b263c46)] - docs(infinite-scroll): update changelog 
+
 ## 2024-06-24, Version 1.1.0
 
 ### Notable Changes
