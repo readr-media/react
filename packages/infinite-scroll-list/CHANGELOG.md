@@ -1,5 +1,35 @@
 # @readr-media/react-infinite-scroll-list Changelog
 
+## 2024-07-11, Version 1.2.0
+
+### Notable Changes
+* Update `initialList` related handle.  If length of `initialList` is less than `pageSize`, load-more trigger won't display.
+
+### Commits
+* \[[`9b51b3dec0`](https://github.com/readr-media/react-infinite-scroll-list/commit/9b51b3dec0)] - chore(infinite-scroll): update package version (Tsuki Akiba)
+* \[[`f145a5a941`](https://github.com/readr-media/react-infinite-scroll-list/commit/f145a5a941)] - refactor(infinite-scroll): update initialList related handle (Tsuki Akiba)
+* \[[`7147b78f88`](https://github.com/readr-media/react-infinite-scroll-list/commit/7147b78f88)] - docs(infinite-scroll): update CHANGELOG (Tsuki Akiba)
+
+## 2024-06-25, Version 1.1.2
+
+### Notable Changes
+* Move `ts-xor` from devDependencies to dependencies
+
+### Commits
+* \[[`a8de9bd332`](https://github.com/readr-media/react/commit/a8de9bd332)] - chore(infinite-scroll): bump package version (Tsuki Akiba)
+* \[[`7f59530228`](https://github.com/readr-media/react/commit/7f59530228)] - chore(infinite-scroll): move ts-xor from devDependencies to dependencies (Tsuki Akiba)
+* \[[`fa2b833431`](https://github.com/readr-media/react/commit/fa2b833431)] - docs(infinite-scroll): update CHANGELOG (Tsuki Akiba)
+
+## 2024-06-25, Version 1.1.1
+
+### Notable Changes
+* Fix error that occurs after manually triggering load-more effect
+
+### Commits
+* \[[`72f2df3efd`](https://github.com/readr-media/react/commit/72f2df3efd)] - chore(infinite-scroll): bump package version (Tsuki Akiba)
+* \[[`66b0b4f04c`](https://github.com/readr-media/react/commit/66b0b4f04c)] - fix(infinite-scroll): error occurs after manually triggering load-more (Tsuki Akiba)
+* \[[`175b263c46`](https://github.com/readr-media/react/commit/175b263c46)] - docs(infinite-scroll): update changelog 
+
 ## 2024-06-24, Version 1.1.0
 
 ### Notable Changes
