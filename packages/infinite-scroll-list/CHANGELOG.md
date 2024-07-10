@@ -1,5 +1,15 @@
 # @readr-media/react-infinite-scroll-list Changelog
 
+## 2024-07-11, Version 1.2.0
+
+### Notable Changes
+* Update `initialList` related handle.  If length of `initialList` is less than `pageSize`, load-more trigger won't display.
+
+### Commits
+* \[[`9b51b3dec0`](https://github.com/readr-media/react-infinite-scroll-list/commit/9b51b3dec0)] - chore(infinite-scroll): update package version (Tsuki Akiba)
+* \[[`f145a5a941`](https://github.com/readr-media/react-infinite-scroll-list/commit/f145a5a941)] - refactor(infinite-scroll): update initialList related handle (Tsuki Akiba)
+* \[[`7147b78f88`](https://github.com/readr-media/react-infinite-scroll-list/commit/7147b78f88)] - docs(infinite-scroll): update CHANGELOG (Tsuki Akiba)
+
 ## 2024-06-25, Version 1.1.2
 
 ### Notable Changes
