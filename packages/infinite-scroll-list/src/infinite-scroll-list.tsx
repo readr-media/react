@@ -3,7 +3,7 @@ import type { XOR } from 'ts-xor'
 
 type Props<T> = {
   /** The initial data list to render */
-  initialList?: T[]
+  initialList?: T[] | null
   /** Maximum of items to be rendered  */
   amountOfElements?: number
   /** Maxmium of fetches to be fired */
@@ -37,7 +37,7 @@ type Props<T> = {
  * This component will progressively fetch data and render theme
  */
 export default function InfiniteScrollList<T>({
-  initialList = [],
+  initialList,
   amountOfElements,
   pageAmount,
   pageSize,
@@ -47,10 +47,19 @@ export default function InfiniteScrollList<T>({
   loader,
   hasCustomTrigger = false,
 }: Props<T>) {
-  const [renderSize, setRenderSize] = useState(pageSize)
-  const [dataList, setDataList] = useState([...initialList])
+  const initialListIsArray = Array.isArray(initialList)
+  const [renderSize, setRenderSize] = useState(
+    !initialListIsArray ? 0 : pageSize
+  )
+  const [dataList, setDataList] = useState(
+    initialListIsArray ? [...initialList] : []
+  )
 
   const checkIsMoreData = useCallback(() => {
+    if (initialListIsArray && fetchedPage.current === 1) {
+      return dataList.length >= pageSize
+    }
+
     if (typeof amountOfElements === 'number' && amountOfElements) {
       return dataList.length < amountOfElements
     } else {
@@ -60,13 +69,20 @@ export default function InfiniteScrollList<T>({
         return true
       }
     }
-  }, [amountOfElements, dataList.length, pageAmount, renderSize])
+  }, [
+    amountOfElements,
+    dataList.length,
+    pageAmount,
+    renderSize,
+    initialListIsArray,
+    pageSize,
+  ])
 
   /**
    * If initialList is an empty array, it means that no element have been displayed at beginning,
    * so initialPage needs to be set to 0  to avoid undisplayed elements being skipped.
    */
-  const initialPage = initialList.length ? 1 : 0
+  const initialPage = initialListIsArray ? 1 : 0
 
   /**
    * The number of fetches that is sent currently.
