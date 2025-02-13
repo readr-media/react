@@ -33,7 +33,5 @@
     "dist",
     "CHANGELOG.md"
   ],
-  "dependencies": {
-    "ts-xor": "^1.3.0"
-  }
+  "dependencies": {}
 }

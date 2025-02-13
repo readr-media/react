@@ -6,7 +6,6 @@ import {
   type ReactNode,
   useMemo,
 } from 'react'
-import type { XOR } from 'ts-xor'
 
 type Props<T> = {
   /** The initial data list to render */
@@ -26,19 +25,11 @@ type Props<T> = {
   ) => ReactNode
   /** The loader element to display during data loading */
   loader?: ReactNode
-} & XOR<
-  {
-    /** Manual (click) fetch is not allowed when custom trigger is set  */
-    /** Wether the custom trigger ref will provided throught children callback to set up trigger point */
-    hasCustomTrigger: true
-    /** Whether data fetch is executed atomatically */
-    isAutoFetch?: true
-  },
-  {
-    hasCustomTrigger?: false
-    isAutoFetch?: boolean
-  }
->
+  /** Whether the custom trigger ref will provided throught children callback to set up trigger point */
+  hasCustomTrigger?: boolean
+  /** Whether data fetch is executed atomatically */
+  isAutoFetch?: boolean
+}
 
 /**
  * This component will progressively fetch data and render theme
@@ -175,8 +166,7 @@ export default function InfiniteScrollList<T>({
     if (triggerElement) {
       if (isAutoFetch) {
         observer.observe(triggerElement)
-      } else if (!hasCustomTrigger) {
-        // only default trigger supports manully load more
+      } else {
         triggerElement.addEventListener('click', clickHandler)
       }
     }
@@ -185,7 +175,7 @@ export default function InfiniteScrollList<T>({
       if (triggerElement) {
         if (isAutoFetch) {
           observer.disconnect()
-        } else if (!hasCustomTrigger) {
+        } else {
           triggerElement.removeEventListener('click', clickHandler)
         }
       }
