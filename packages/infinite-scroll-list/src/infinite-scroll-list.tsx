@@ -1,5 +1,11 @@
-import { useState, useRef, useEffect, useCallback, type ReactNode } from 'react'
-import type { XOR } from 'ts-xor'
+import {
+  useState,
+  useRef,
+  useEffect,
+  useCallback,
+  type ReactNode,
+  useMemo,
+} from 'react'
 
 type Props<T> = {
   /** The initial data list to render */
@@ -19,19 +25,11 @@ type Props<T> = {
   ) => ReactNode
   /** The loader element to display during data loading */
   loader?: ReactNode
-} & XOR<
-  {
-    /** Manual (click) fetch is not allowed when custom trigger is set  */
-    /** Wether the custom trigger ref will provided throught children callback to set up trigger point */
-    hasCustomTrigger: true
-    /** Whether data fetch is executed atomatically */
-    isAutoFetch?: true
-  },
-  {
-    hasCustomTrigger?: false
-    isAutoFetch?: boolean
-  }
->
+  /** Whether the custom trigger ref will provided throught children callback to set up trigger point */
+  hasCustomTrigger?: boolean
+  /** Whether data fetch is executed atomatically */
+  isAutoFetch?: boolean
+}
 
 /**
  * This component will progressively fetch data and render theme
@@ -55,29 +53,6 @@ export default function InfiniteScrollList<T>({
     initialListIsArray ? [...initialList] : []
   )
 
-  const checkIsMoreData = useCallback(() => {
-    if (initialListIsArray && fetchedPage.current === 1) {
-      return dataList.length >= pageSize
-    }
-
-    if (typeof amountOfElements === 'number' && amountOfElements) {
-      return dataList.length < amountOfElements
-    } else {
-      if (typeof pageAmount === 'number' && pageAmount) {
-        return renderSize < dataList.length || fetchedPage.current < pageAmount
-      } else {
-        return true
-      }
-    }
-  }, [
-    amountOfElements,
-    dataList.length,
-    pageAmount,
-    renderSize,
-    initialListIsArray,
-    pageSize,
-  ])
-
   /**
    * If initialList is an empty array, it means that no element have been displayed at beginning,
    * so initialPage needs to be set to 0  to avoid undisplayed elements being skipped.
@@ -91,13 +66,21 @@ export default function InfiniteScrollList<T>({
   const fetchedPage = useRef(initialPage)
   const renderList = dataList.slice(0, renderSize)
   const isLoading = useRef(false)
-  const [hasNotFetchedData, setHasNotFetchedData] = useState(checkIsMoreData())
+  const [fetchEnded, setFetchEnded] = useState(false)
+  const hasNotFetchedData = useMemo(() => {
+    if (typeof amountOfElements === 'number' && amountOfElements) {
+      return dataList.length < amountOfElements
+    }
 
-  useEffect(() => {
-    setHasNotFetchedData(checkIsMoreData())
-  }, [checkIsMoreData])
+    if (typeof pageAmount === 'number' && pageAmount) {
+      return fetchedPage.current < pageAmount
+    }
 
-  const hasNotRenderedData = hasNotFetchedData || renderSize < dataList.length
+    return true
+  }, [amountOfElements, dataList.length, pageAmount])
+
+  const hasNotRenderedData =
+    (hasNotFetchedData || renderSize < dataList.length) && fetchEnded === false
 
   const isNotEnoughToRender = pageAmount
     ? fetchedPage.current < pageAmount &&
@@ -105,17 +88,6 @@ export default function InfiniteScrollList<T>({
     : dataList.length - renderSize < pageSize
 
   const handleLoadMore = useCallback(() => {
-    const isExceedThreshold = (
-      list: T[],
-      amountOfElements?: number
-    ): amountOfElements is number => {
-      if (typeof amountOfElements === 'number' && amountOfElements) {
-        return list.length >= amountOfElements
-      } else {
-        return false
-      }
-    }
-
     if (isLoading.current) {
       return
     }
@@ -126,20 +98,17 @@ export default function InfiniteScrollList<T>({
       const newPage = fetchedPage.current + 1
       isLoading.current = true
       fetchListInPage(newPage).then((newList) => {
-        if (newList.length === 0) setHasNotFetchedData(false)
+        if (newList.length === 0) {
+          setFetchEnded(true)
+        }
 
         const list = [...dataList, ...newList]
 
-        if (isExceedThreshold(list, amountOfElements)) {
-          setHasNotFetchedData(false)
-          setDataList(list.slice(amountOfElements * -1))
-        } else {
-          setDataList(list)
-        }
-
         if (amountOfElements) {
+          setDataList(list.slice(0, amountOfElements))
           setRenderSize(Math.min(oldRenderSize + pageSize, amountOfElements))
         } else {
+          setDataList(list)
           setRenderSize(Math.min(oldRenderSize + pageSize, list.length))
         }
 
@@ -197,8 +166,7 @@ export default function InfiniteScrollList<T>({
     if (triggerElement) {
       if (isAutoFetch) {
         observer.observe(triggerElement)
-      } else if (!hasCustomTrigger) {
-        // only default trigger supports manully load more
+      } else {
         triggerElement.addEventListener('click', clickHandler)
       }
     }
@@ -207,7 +175,7 @@ export default function InfiniteScrollList<T>({
       if (triggerElement) {
         if (isAutoFetch) {
           observer.disconnect()
-        } else if (!hasCustomTrigger) {
+        } else {
           triggerElement.removeEventListener('click', clickHandler)
         }
       }

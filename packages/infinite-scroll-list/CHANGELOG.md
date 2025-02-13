@@ -1,14 +1,27 @@
 # @readr-media/react-infinite-scroll-list Changelog
 
+## 2025-02-14, Version 1.3.0
+
+### Notable Changes
+* Fix load more behaviors
+* Allow data fetched manually with custom trigger in use
+
+### Commits
+* \[[`77cd94f99f`](https://github.com/readr-media/react/commit/77cd94f99f)] - chore(infinite-scroll): bump package version (Tsuki Akiba)
+* \[[`90efb41387`](https://github.com/readr-media/react/commit/90efb41387)] - refactor(infinite-scroll): allow data fetched manually with custom trigger (Tsuki Akiba)
+* \[[`3e524e80be`](https://github.com/readr-media/react/commit/3e524e80be)] - fix(infinite-scroll): load more behaviors (Tsuki Akiba)
+* \[[`508f90d31a`](https://github.com/readr-media/react/commit/508f90d31a)] - docs(infinite-scroll): update CHANGELOG (Tsuki Akiba)
+
+
 ## 2024-07-11, Version 1.2.0
 
 ### Notable Changes
 * Update `initialList` related handle.  If length of `initialList` is less than `pageSize`, load-more trigger won't display.
 
 ### Commits
-* \[[`9b51b3dec0`](https://github.com/readr-media/react-infinite-scroll-list/commit/9b51b3dec0)] - chore(infinite-scroll): update package version (Tsuki Akiba)
-* \[[`f145a5a941`](https://github.com/readr-media/react-infinite-scroll-list/commit/f145a5a941)] - refactor(infinite-scroll): update initialList related handle (Tsuki Akiba)
-* \[[`7147b78f88`](https://github.com/readr-media/react-infinite-scroll-list/commit/7147b78f88)] - docs(infinite-scroll): update CHANGELOG (Tsuki Akiba)
+* \[[`9b51b3dec0`](https://github.com/readr-media/react/commit/9b51b3dec0)] - chore(infinite-scroll): update package version (Tsuki Akiba)
+* \[[`f145a5a941`](https://github.com/readr-media/react/commit/f145a5a941)] - refactor(infinite-scroll): update initialList related handle (Tsuki Akiba)
+* \[[`7147b78f88`](https://github.com/readr-media/react/commit/7147b78f88)] - docs(infinite-scroll): update CHANGELOG (Tsuki Akiba)
 
 ## 2024-06-25, Version 1.1.2
 
