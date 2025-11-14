@@ -10,6 +10,7 @@
 - 當所有圖片 URL 皆載入失敗時，載入預設圖片。
 - 實作圖片載入動畫效果。
 - 實作圖片 preload 或 lazy load。
+- 可傳入參數`fetchPriority`，指定圖片抓取的優先順序。
 
 ## How to Use This Pkg as React Component ?
 
@@ -58,6 +59,7 @@ export default function SomeComponent() {
 | debugMode                   | boolean  |      | `false`                                                                                    | 是否開啟開發模式，若開啟，則在載入圖片成功或失敗時，透過`console.log`顯示相關訊息                                                                                                       |
 | priority                    | boolean  |      | `false`                                                                                    | 設定圖片是否 preload (`rel="preload"`)                                                                                                                                                  |
 | intersectionObserverOptions | Object   |      | `{root: null, rootMargin: '0px', threshold: 0.25, }`                                       | intersection observer 的選項，用於調整圖片懶載入的條件。僅在參數`priority`為`false`的情況才會生效                                                                                       |
+| fetchPriority               | String   |      | `"auto"`                                                                                   | 指示資源的抓取優先級。可能的值為 "high"、"low" 和 "auto"。                                                                                                                              |
 | priority                    | Object   |      | `{}`                                                                                       | 傳給 `img` 的額外屬性                                                                                                                                                                   |
 
 ## Sequence of Loading Images

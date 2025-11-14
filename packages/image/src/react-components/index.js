@@ -47,6 +47,7 @@ export default function CustomImage({
     rootMargin: '0px',
     threshold: 0.25,
   },
+  fetchPriority = 'auto',
   className = '',
   imageProps = {},
 }) {
@@ -457,6 +458,7 @@ export default function CustomImage({
       src={imageSrc}
       alt={alt}
       rel={priority ? 'preload' : ''}
+      fetchpriority={fetchPriority}
       {...imageProps}
     ></img>
   )

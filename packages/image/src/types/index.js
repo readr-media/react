@@ -60,6 +60,11 @@
  * - Options of intersection observers, let you control the circumstance of observers.
  * - Optional, default value is `{ root: null, rootMargin: '0px', threshold: 0.25, }`.
  * - See [Mdn Docs](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API) to get more information.
+ * @property {String} [props.fetchPriority]
+ * - Indicates the relative priority of fetching the resource.
+ * - Possible values are "high", "low", and "auto".
+ * - Optional, default value is "auto".
+ * See [Mdn Docs](https://developer.mozilla.org/en-US/docs/Web/API/HTMLImageElement/fetchPriority) to get more information.
  * @property {string} [props.className]
  * @property {React.ImgHTMLAttributes<HTMLImageElement>} [imageProps] - Additional properties for the img element.
  */
