@@ -3,3 +3,10 @@ dist
 node_modules
 .eslintcache
 .DS_store
+
+# cursor
+.cursor
+
+# gemini
+.gemini/
+GEMINI.md
