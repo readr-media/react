@@ -266,12 +266,7 @@ export default function CustomImage({
       sizesStr = defaultValue
     }
 
-    printLogInDevMode(`Generated 
-endersize
-enders info is 
-endersize${sizesStr}
-endersize
-endersize`)
+    printLogInDevMode(`Generated \`sizes\` info is \`${sizesStr}\``)
     return sizesStr
   }
 
