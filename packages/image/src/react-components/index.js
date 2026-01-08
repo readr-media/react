@@ -49,6 +49,7 @@ export default function CustomImage({
   },
   className = '',
   fetchPriority = 'auto',
+  loading = 'lazy',
   ...imageProps
 }) {
   /**
@@ -506,7 +507,7 @@ endersize`)
       alt={alt}
       rel={priority ? 'preload' : ''}
       fetchPriority={priority ? 'high' : fetchPriority}
-      loading={priority ? 'eager' : 'lazy'} // Native browser attributes for responsive images and performance. 'eager' loading is used for priority images to improve LCP.
+      loading={priority ? 'eager' : loading} // Native browser attributes for responsive images and performance. 'eager' loading is used for priority images to improve LCP.
     ></img>
   )
 }
