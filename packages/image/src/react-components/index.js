@@ -505,7 +505,6 @@ endersize`)
       srcSet={imageSrcSet}
       sizes={imageSizes}
       alt={alt}
-      rel={priority ? 'preload' : ''}
       fetchPriority={priority ? 'high' : fetchPriority}
       loading={priority ? 'eager' : loading} // Native browser attributes for responsive images and performance. 'eager' loading is used for priority images to improve LCP.
     ></img>
