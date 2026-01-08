@@ -48,6 +48,7 @@ export default function CustomImage({
     threshold: 0.25,
   },
   className = '',
+  fetchPriority = 'auto',
   ...imageProps
 }) {
   /**
@@ -167,7 +168,7 @@ export default function CustomImage({
    * 2. Backward compatibility for other components (like TopicList) that rely on loadingImage spinner.
    */
   function getInitialSrc() {
-    if (priority && !loadingImage && imagesList.length > 0) {
+    if (priority && imagesList.length > 0) {
       // Find original or the first available image
       const original = imagesList.find((pair) => pair[0] === 'original')
       return original ? original[1] : imagesList[0][1]
@@ -186,16 +187,34 @@ export default function CustomImage({
    * @param {[string, string][]} imagesList - list of images
    */
   function transformImagesSrcSet(imagesList) {
-    const str = imagesList
-      .filter(
-        (pair) =>
-          pair[0] !== 'original' &&
-          pair[0] !== `original-${FILE_EXTENSION_WEBP}`
-      )
-      .map((pair) => {
-        const widthText = pair[0].replace(`-${FILE_EXTENSION_WEBP}`, '')
-        const width = widthText.match(REGEX)[0]
-        return `${pair[1]} ${width}w`
+    const imagesToTransform = imagesList.filter(
+      (pair) =>
+        pair[0] !== 'original' && pair[0] !== `original-${FILE_EXTENSION_WEBP}`
+    )
+
+    const widthMap = new Map()
+
+    imagesToTransform.forEach((pair) => {
+      const widthText = pair[0].replace(`-${FILE_EXTENSION_WEBP}`, '')
+      const width = widthText.match(REGEX)[0]
+      const isWebP = pair[0].endsWith(`-${FILE_EXTENSION_WEBP}`)
+
+      if (!widthMap.has(width)) {
+        // If width not recorded yet, add it
+        widthMap.set(width, { url: pair[1], isWebP })
+      } else {
+        // If width exists, check if we should replace it
+        // We prefer non-WebP (JPG/PNG) for stability in native <img> srcset
+        const currentEntry = widthMap.get(width)
+        if (currentEntry.isWebP && !isWebP) {
+          widthMap.set(width, { url: pair[1], isWebP: false })
+        }
+      }
+    })
+
+    const str = Array.from(widthMap.entries())
+      .map(([width, entry]) => {
+        return `${entry.url} ${width}w`
       })
       .join(',')
 
@@ -486,6 +505,7 @@ endersize`)
       sizes={imageSizes}
       alt={alt}
       rel={priority ? 'preload' : ''}
+      fetchPriority={priority ? 'high' : fetchPriority}
       loading={priority ? 'eager' : 'lazy'} // Native browser attributes for responsive images and performance. 'eager' loading is used for priority images to improve LCP.
     ></img>
   )
