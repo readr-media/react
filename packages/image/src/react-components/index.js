@@ -47,15 +47,32 @@ export default function CustomImage({
     rootMargin: '0px',
     threshold: 0.25,
   },
-  fetchPriority = 'auto',
   className = '',
-  imageProps = {},
+  ...imageProps
 }) {
+  const imagesList = getImagesList(images, imagesWebP)
   const imageRef = useRef(null)
-  const [imageSrc, setImageSrc] = useState(
-    loadingImage ? loadingImage : defaultImage
-  )
+
+  /**
+   * Initialize with the real image URL if priority is true AND no loadingImage is provided.
+   * This ensures:
+   * 1. LCP optimization for Hero Images (where loadingImage is intentionally removed).
+   * 2. Backward compatibility for other components (like TopicList) that rely on loadingImage spinner.
+   */
+  function getInitialSrc() {
+    if (priority && !loadingImage && imagesList.length > 0) {
+      // Find original or the first available image
+      const original = imagesList.find((pair) => pair[0] === 'original')
+      return original ? original[1] : imagesList[0][1]
+    }
+    return loadingImage ? loadingImage : defaultImage
+  }
+
+  const [imageSrc, setImageSrc] = useState(getInitialSrc())
   const [isImageLoaded, setIsImageLoaded] = useState(false)
+
+  const imageSrcSet = transformImagesSrcSet(imagesList)
+  const imageSizes = transformImageSizes(rwd, breakpoint)
 
   const getImageStyle = () => {
     return {
@@ -452,14 +469,16 @@ export default function CustomImage({
 
   return (
     <img
+      {...imageProps}
       className={`readr-media-react-image ${className}`}
       style={imageStyle}
       ref={imageRef}
       src={imageSrc}
+      srcSet={imageSrcSet}
+      sizes={imageSizes}
       alt={alt}
       rel={priority ? 'preload' : ''}
-      fetchpriority={fetchPriority}
-      {...imageProps}
+      loading={priority ? 'eager' : 'lazy'} // Native browser attributes for responsive images and performance. 'eager' loading is used for priority images to improve LCP.
     ></img>
   )
 }
