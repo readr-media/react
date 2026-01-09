@@ -47,43 +47,17 @@ export default function CustomImage({
     rootMargin: '0px',
     threshold: 0.25,
   },
-  fetchPriority = 'auto',
   className = '',
-  imageProps = {},
+  fetchPriority = 'auto',
+  loading = 'lazy',
+  ...imageProps
 }) {
-  const imageRef = useRef(null)
-  const [imageSrc, setImageSrc] = useState(
-    loadingImage ? loadingImage : defaultImage
-  )
-  const [isImageLoaded, setIsImageLoaded] = useState(false)
-
-  const getImageStyle = () => {
-    return {
-      objectFit,
-      width,
-      height,
-      filter: getFilter(),
-    }
-
-    function getFilter() {
-      if (loadingImage || isImageLoaded) {
-        return 'unset'
-      } else {
-        return 'blur(8px)'
-      }
-    }
-  }
-  /**
-   * custom image style
-   *
-   */
-  const imageStyle = getImageStyle()
   /**
    * Print log when `props.debugMode` is true
    * @param {String} message
    * @returns {void}
    */
-  const printLogInDevMode = (message) => {
+  function printLogInDevMode(message) {
     if (debugMode) {
       console.log(message)
     }
@@ -105,7 +79,7 @@ export default function CustomImage({
    * @param {Object} images
    * @returns {[string, string][]}
    */
-  const transformImagesContent = (images) => {
+  function transformImagesContent(images) {
     /** @type {[string,string][]} */
     const imagesWithoutEmptyProperty = Object.entries(images)
       .filter(
@@ -132,33 +106,130 @@ export default function CustomImage({
     return sortedImagesList
   }
 
+  function getImagesList(images, imagesWebP) {
+    const hasImages = !!images && !!Object.entries(images).length
+    const hasWebPImage = !!imagesWebP && !!Object.entries(imagesWebP).length
+    if (!hasImages && !hasWebPImage) {
+      throw new Error(errorMessage.noImageProvided)
+    }
+    const imagesList = transformImagesContent(images)
+
+    if (hasWebPImage) {
+      const imagesWebPList = transformImagesContent(imagesWebP).map((pair) => {
+        return [`${pair[0]}-${FILE_EXTENSION_WEBP}`, pair[1]]
+      })
+      const imagesListContainWebP = imagesList.concat(imagesWebPList)
+
+      const sortedList = imagesListContainWebP.sort(sortByResolutionAndIsWebP)
+
+      return sortedList
+
+      /**
+       * Function for Sort imagesList containing webP images.
+       * Sorting rule is:
+       *  1. Sort by resolution of images from small to large.
+       *  2. if resolution is same, webP image will be placed forward.
+       * So order after sorting will be:
+       * `w480-webP` -> `w480` -> `w800-webP` -> `w800` ...... -> `original-webP` -> `original`
+       * @param {[string, string]} pairA
+       * @param {[string, string]} pairB
+       * @returns {[string, string][]}
+       */
+      function sortByResolutionAndIsWebP(pairA, pairB) {
+        const getResolution = (str) => {
+          const match = str.match(/\d+/)
+          return match ? parseInt(match[0]) : Infinity
+        }
+
+        const numA = getResolution(pairA[0])
+        const numB = getResolution(pairB[0])
+
+        if (numA !== numB) {
+          return numA - numB
+        }
+
+        const pairAIsWebP = pairA[0].endsWith(`-${FILE_EXTENSION_WEBP}`)
+        const pairBIsWebP = pairB[0].endsWith(`-${FILE_EXTENSION_WEBP}`)
+
+        if (pairAIsWebP !== pairBIsWebP) {
+          return pairAIsWebP ? -1 : 1
+        }
+
+        return 0
+      }
+    } else {
+      return imagesList
+    }
+  }
+
+  /**
+   * Initialize with the real image URL if priority is true AND no loadingImage is provided.
+   * This ensures:
+   * 1. LCP optimization for Hero Images (where loadingImage is intentionally removed).
+   * 2. Backward compatibility for other components (like TopicList) that rely on loadingImage spinner.
+   */
+  function getInitialSrc() {
+    if (priority && imagesList.length > 0) {
+      // Find original or the first available image
+      const original = imagesList.find((pair) => pair[0] === 'original')
+      return original ? original[1] : imagesList[0][1]
+    }
+    return loadingImage ? loadingImage : defaultImage
+  }
+
+  const imagesList = getImagesList(images, imagesWebP)
+  const imageRef = useRef(null)
+
+  const [imageSrc, setImageSrc] = useState(getInitialSrc())
+  const [isImageLoaded, setIsImageLoaded] = useState(false)
+
   /**
    * Transform list of images into string for attribute 'srcset' of <img>.
    * @param {[string, string][]} imagesList - list of images
    */
-  const transformImagesSrcSet = (imagesList) => {
-    const str = imagesList
-      .filter(
-        (pair) =>
-          pair[0] !== 'original' &&
-          pair[0] !== `original-${FILE_EXTENSION_WEBP}`
-      )
-      .map((pair) => {
-        const widthText = pair[0].replace(`-${FILE_EXTENSION_WEBP}`, '')
-        const width = widthText.match(REGEX)[0]
-        return `${pair[1]} ${width}w`
+  function transformImagesSrcSet(imagesList) {
+    const imagesToTransform = imagesList.filter(
+      (pair) =>
+        pair[0] !== 'original' && pair[0] !== `original-${FILE_EXTENSION_WEBP}`
+    )
+
+    const widthMap = new Map()
+
+    imagesToTransform.forEach((pair) => {
+      const widthText = pair[0].replace(`-${FILE_EXTENSION_WEBP}`, '')
+      const width = widthText.match(REGEX)[0]
+      const isWebP = pair[0].endsWith(`-${FILE_EXTENSION_WEBP}`)
+
+      if (!widthMap.has(width)) {
+        // If width not recorded yet, add it
+        widthMap.set(width, { url: pair[1], isWebP })
+      } else {
+        // If width exists, check if we should replace it
+        // We prefer non-WebP (JPG/PNG) for stability in native <img> srcset
+        const currentEntry = widthMap.get(width)
+        if (currentEntry.isWebP && !isWebP) {
+          widthMap.set(width, { url: pair[1], isWebP: false })
+        }
+      }
+    })
+
+    const str = Array.from(widthMap.entries())
+      .map(([width, entry]) => {
+        return `${entry.url} ${width}w`
       })
       .join(',')
 
     return str
   }
 
+  const imageSrcSet = transformImagesSrcSet(imagesList)
+
   /**
    * @param {string} sizes
    * @param {string} defaultValue
    * @returns {string}
    */
-  const joinSizesWidthDefaultValue = (sizes, defaultValue) => {
+  function joinSizesWidthDefaultValue(sizes, defaultValue) {
     if (/max-width/.test(sizes)) {
       return [sizes, defaultValue].join(', ')
     } else {
@@ -171,7 +242,7 @@ export default function CustomImage({
    * @param {Object} breakpoint
    * @returns {string}
    */
-  const transformImageSizes = (rwd, breakpoint) => {
+  function transformImageSizes(rwd, breakpoint) {
     const defaultValue = '100vw'
     let sizesStr
 
@@ -199,6 +270,30 @@ export default function CustomImage({
     return sizesStr
   }
 
+  const imageSizes = transformImageSizes(rwd, breakpoint)
+
+  const getImageStyle = () => {
+    return {
+      objectFit,
+      width,
+      height,
+      filter: getFilter(),
+    }
+
+    function getFilter() {
+      if (loadingImage || isImageLoaded) {
+        return 'unset'
+      } else {
+        return 'blur(8px)'
+      }
+    }
+  }
+  /**
+   * custom image style
+   *
+   */
+  const imageStyle = getImageStyle()
+
   /**
    * Check which image should be load first, and return the resolution of image.
    * @param {[string, string][]} imagesList - The URL of the images to load
@@ -217,7 +312,7 @@ export default function CustomImage({
       if (imageSrcSet) {
         const img = new Image()
         /**
-         * @param {Event & { target: HTMLImageElement }} event
+         * @param {Event & { target: HTMLImageElement }}
          */
         const eventHandler = (event) => {
           const eventType = event.type
@@ -314,61 +409,6 @@ export default function CustomImage({
     setIsImageLoaded(true)
   }
 
-  const getImagesList = (images, imagesWebP) => {
-    const hasImages = !!images && !!Object.entries(images).length
-    const hasWebPImage = !!imagesWebP && !!Object.entries(imagesWebP).length
-    if (!hasImages && !hasWebPImage) {
-      throw new Error(errorMessage.noImageProvided)
-    }
-    const imagesList = transformImagesContent(images)
-
-    if (hasWebPImage) {
-      const imagesWebPList = transformImagesContent(imagesWebP).map((pair) => {
-        return [`${pair[0]}-${FILE_EXTENSION_WEBP}`, pair[1]]
-      })
-      const imagesListContainWebP = imagesList.concat(imagesWebPList)
-
-      const sortedList = imagesListContainWebP.sort(sortByResolutionAndIsWebP)
-
-      return sortedList
-
-      /**
-       * Function for Sort imagesList containing webP images.
-       * Sorting rule is:
-       *  1. Sort by resolution of images from small to large.
-       *  2. if resolution is same, webP image will be placed forward.
-       * So order after sorting will be:
-       * `w480-webP` -> `w480` -> `w800-webP` -> `w800` ...... -> `original-webP` -> `original`
-       * @param {[string, string]} pairA
-       * @param {[string, string]} pairB
-       * @returns {[string, string][]}
-       */
-      function sortByResolutionAndIsWebP(pairA, pairB) {
-        const getResolution = (str) => {
-          const match = str.match(/\d+/)
-          return match ? parseInt(match[0]) : Infinity
-        }
-
-        const numA = getResolution(pairA[0])
-        const numB = getResolution(pairB[0])
-
-        if (numA !== numB) {
-          return numA - numB
-        }
-
-        const pairAIsWebP = pairA[0].endsWith(`-${FILE_EXTENSION_WEBP}`)
-        const pairBIsWebP = pairB[0].endsWith(`-${FILE_EXTENSION_WEBP}`)
-
-        if (pairAIsWebP !== pairBIsWebP) {
-          return pairAIsWebP ? -1 : 1
-        }
-
-        return 0
-      }
-    } else {
-      return imagesList
-    }
-  }
   const loadImageProgress = async () => {
     try {
       const imagesList = getImagesList(images, imagesWebP)
@@ -452,14 +492,16 @@ export default function CustomImage({
 
   return (
     <img
+      {...imageProps}
       className={`readr-media-react-image ${className}`}
       style={imageStyle}
       ref={imageRef}
       src={imageSrc}
+      srcSet={imageSrcSet}
+      sizes={imageSizes}
       alt={alt}
-      rel={priority ? 'preload' : ''}
-      fetchpriority={fetchPriority}
-      {...imageProps}
+      fetchPriority={priority ? 'high' : fetchPriority}
+      loading={priority ? 'eager' : loading} // Native browser attributes for responsive images and performance. 'eager' loading is used for priority images to improve LCP.
     ></img>
   )
 }
