@@ -1,6 +1,6 @@
 {
   "name": "@readr-media/react-image",
-  "version": "2.2.6",
+  "version": "2.2.7",
   "description": "",
   "main": "lib/cjs/index.js",
   "module": "lib/esm/index.js",

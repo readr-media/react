@@ -182,6 +182,7 @@ export default function CustomImage({
 
   const [imageSrc, setImageSrc] = useState(getInitialSrc())
   const [isImageLoaded, setIsImageLoaded] = useState(false)
+  const [isError, setIsError] = useState(false)
 
   /**
    * Transform list of images into string for attribute 'srcset' of <img>.
@@ -205,10 +206,12 @@ export default function CustomImage({
         widthMap.set(width, { url: pair[1], isWebP })
       } else {
         // If width exists, check if we should replace it
-        // We prefer non-WebP (JPG/PNG) for stability in native <img> srcset
         const currentEntry = widthMap.get(width)
-        if (currentEntry.isWebP && !isWebP) {
-          widthMap.set(width, { url: pair[1], isWebP: false })
+
+        // We always prefer WebP for performance (smaller file size/faster LCP).
+        // Modern browser support for WebP is >97%, so the risk of "broken images" is negligible.
+        if (!currentEntry.isWebP && isWebP) {
+          widthMap.set(width, { url: pair[1], isWebP: true })
         }
       }
     })
@@ -222,7 +225,8 @@ export default function CustomImage({
     return str
   }
 
-  const imageSrcSet = transformImagesSrcSet(imagesList)
+  const imageSrcSet =
+    isImageLoaded || isError ? undefined : transformImagesSrcSet(imagesList)
 
   /**
    * @param {string} sizes
@@ -270,7 +274,7 @@ export default function CustomImage({
     return sizesStr
   }
 
-  const imageSizes = transformImageSizes(rwd, breakpoint)
+  const imageSizes = isError ? undefined : transformImageSizes(rwd, breakpoint)
 
   const getImageStyle = () => {
     return {
@@ -326,7 +330,11 @@ export default function CustomImage({
                 resolve(imagesList[index][0])
                 break
               case 'error':
-                resolve(imagesList[index + 1][0])
+                // Instead of resolving next, we try to see if any resolution works
+                // But for getResolution, we just want to know what the browser picks.
+                // If it fails, we let loadImages handle the sequential fallback.
+                resolve(imagesList[index][0])
+                break
             }
           } else {
             resolve(imagesList[imagesList.length - 1][0])
@@ -365,6 +373,7 @@ export default function CustomImage({
         img.removeEventListener('load', loadHandler)
       }
       const errorHandler = () => {
+        printLogInDevMode(`Failed to load image: ${url}`)
         reject()
         img.removeEventListener('error', errorHandler)
       }
@@ -412,6 +421,9 @@ export default function CustomImage({
   const loadImageProgress = async () => {
     try {
       const imagesList = getImagesList(images, imagesWebP)
+      if (imagesList.length === 0) {
+        throw new Error(errorMessage.noImageProvided)
+      }
       const resolution = await getResolution(imagesList)
       const url = await loadImages(resolution, imagesList)
       handleImageOnLoaded(url)
@@ -439,7 +451,8 @@ export default function CustomImage({
           printLogInDevMode(`Unexpected error, ${e}`)
           break
       }
-      if (imageRef?.current?.src) {
+      if (imageRef?.current) {
+        setIsError(true)
         handleImageOnLoaded(defaultImage)
         imageRef?.current.addEventListener('error', () => {
           printLogInDevMode(`${errorMessage.unableLoadDefaultImage}`)
@@ -500,7 +513,7 @@ export default function CustomImage({
       srcSet={imageSrcSet}
       sizes={imageSizes}
       alt={alt}
-      fetchPriority={priority ? 'high' : fetchPriority}
+      fetchpriority={priority ? 'high' : fetchPriority}
       loading={priority ? 'eager' : loading} // Native browser attributes for responsive images and performance. 'eager' loading is used for priority images to improve LCP.
     ></img>
   )
