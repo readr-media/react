@@ -281,7 +281,7 @@ export default function CustomImage({
     }
 
     function getFilter() {
-      if (loadingImage || isImageLoaded) {
+      if (priority || loadingImage || isImageLoaded) {
         return 'unset'
       } else {
         return 'blur(8px)'
