@@ -15,6 +15,19 @@ const errorMessage = {
 }
 
 /**
+ * @param {string} sizes
+ * @param {string} defaultValue
+ * @returns {string}
+ */
+function joinSizesWidthDefaultValue(sizes, defaultValue) {
+  if (/max-width/.test(sizes)) {
+    return [sizes, defaultValue].join(', ')
+  } else {
+    return defaultValue
+  }
+}
+
+/**
  * @param {import('../types/index').ImageProps} props
  * @returns {JSX.Element}
  */
@@ -249,19 +262,6 @@ export default function CustomImage({
     []
   )
 
-  /**
-   * @param {string} sizes
-   * @param {string} defaultValue
-   * @returns {string}
-   */
-  function joinSizesWidthDefaultValue(sizes, defaultValue) {
-    if (/max-width/.test(sizes)) {
-      return [sizes, defaultValue].join(', ')
-    } else {
-      return defaultValue
-    }
-  }
-
   const transformImageSizes = useCallback(
     (rwd, breakpoint) => {
       const defaultValue = '100vw'
@@ -384,25 +384,28 @@ export default function CustomImage({
    * @param {String} url - The URL of the image to load
    * @returns {Promise<String>} - The URL of the image
    */
-  const loadImage = (url) => {
-    return new Promise((resolve, reject) => {
-      const img = new Image()
+  const loadImage = useCallback(
+    (url) => {
+      return new Promise((resolve, reject) => {
+        const img = new Image()
 
-      const loadHandler = () => {
-        resolve(url)
-        img.removeEventListener('load', loadHandler)
-      }
-      const errorHandler = () => {
-        printLogInDevMode(`Failed to load image: ${url}`)
-        reject()
-        img.removeEventListener('error', errorHandler)
-      }
+        const loadHandler = () => {
+          resolve(url)
+          img.removeEventListener('load', loadHandler)
+        }
+        const errorHandler = () => {
+          printLogInDevMode(`Failed to load image: ${url}`)
+          reject()
+          img.removeEventListener('error', errorHandler)
+        }
 
-      img.addEventListener('load', loadHandler)
-      img.addEventListener('error', errorHandler)
-      img.src = url
-    })
-  }
+        img.addEventListener('load', loadHandler)
+        img.addEventListener('error', errorHandler)
+        img.src = url
+      })
+    },
+    [printLogInDevMode]
+  )
 
   /**
    * Loads a list of images in sequence, it will start loading on certain resolution.
@@ -413,22 +416,25 @@ export default function CustomImage({
    * @returns {Promise<string>} - The URL of the image should loaded
    * @throws {Error<string>}
    */
-  const loadImages = useCallback((resolution, imagesList) => {
-    const index = imagesList.findIndex((pair) => pair[0] === resolution)
-    const loadList = imagesList.slice(index)
-    return loadList.reduce((prevPromise, pair) => {
-      return prevPromise.catch(() => {
-        const isLastImageUrl = pair[1] === loadList[loadList.length - 1][1]
+  const loadImages = useCallback(
+    (resolution, imagesList) => {
+      const index = imagesList.findIndex((pair) => pair[0] === resolution)
+      const loadList = imagesList.slice(index)
+      return loadList.reduce((prevPromise, pair) => {
+        return prevPromise.catch(() => {
+          const isLastImageUrl = pair[1] === loadList[loadList.length - 1][1]
 
-        if (isLastImageUrl) {
-          return loadImage(pair[1]).catch(() => {
-            throw new Error(errorMessage.unableLoadImages)
-          })
-        }
-        return loadImage(pair[1])
-      })
-    }, Promise.reject())
-  }, [])
+          if (isLastImageUrl) {
+            return loadImage(pair[1]).catch(() => {
+              throw new Error(errorMessage.unableLoadImages)
+            })
+          }
+          return loadImage(pair[1])
+        })
+      }, Promise.reject())
+    },
+    [loadImage]
+  )
   /**
    *
    * @param {string} url
