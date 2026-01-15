@@ -540,7 +540,7 @@ export default function CustomImage({
       ref={imageRef}
       src={imageSrc}
       alt={alt}
-      fetchpriority={priority ? 'high' : fetchPriority}
+      fetchpriority={priority ? 'high' : fetchPriority} // React 18.2.0 requires the lowercase fetchpriority attribute; using fetchPriority may not be forwarded correctly and can cause warnings or errors.
       loading={priority ? 'eager' : loading} // Native browser attributes for responsive images and performance. 'eager' loading is used for priority images to improve LCP.
     ></img>
   )
