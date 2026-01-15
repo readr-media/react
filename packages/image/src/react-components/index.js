@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react' // eslint-disable-line
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 
 const FILE_EXTENSION_WEBP = 'webP'
 
@@ -75,7 +75,6 @@ export default function CustomImage({
    *    b. the first child-item does not contain integers.
    *    c. the second child-item (which is the key of certain property in params `images`) is falsy values, e.g. empty string, undefined, null.
    *    As long as one of the conditions is met, will remove item.
-   *    If the first child-item is "original", will not remove no matter what.
    * 3. Sort array by the difference of first child-item. It will check the integer in first child-item, the smaller will be placed forward. If there is no integer in first child-item, it will be placed backward.
    * In the end, if the params `images` is { 1600: '1600.png', original: 'original.png' ,w480: 'w480.png', w800: '', w1200: 'w1200.png' },
    * it will return [ ['w480': 'w480.png'], ['w1200': 'w1200.png'], 'original': 'original.png']
@@ -86,7 +85,7 @@ export default function CustomImage({
     /** @type {[string,string][]} */
     const imagesWithoutEmptyProperty = Object.entries(images)
       .filter(
-        (pair) => (/^w\d+$/.test(pair[0]) && pair[1]) || pair[0] === 'original'
+        (pair) => pair[1] && (/^w\d+$/.test(pair[0]) || pair[0] === 'original')
       )
       .map(([key, value]) => [key, encodeURI(value)])
     const sortedImagesList = imagesWithoutEmptyProperty.sort((pairA, pairB) => {
@@ -170,14 +169,25 @@ export default function CustomImage({
    * This ensures:
    * 1. LCP optimization for Hero Images (where loadingImage is intentionally removed).
    * 2. Backward compatibility for other components (like TopicList) that rely on loadingImage spinner.
+   * 3. Always select a non-empty URL to prevent src="" rendering.
    */
   function getInitialSrc() {
     if (priority && imagesList.length > 0) {
-      // Find original or the first available image
       const original = imagesList.find((pair) => pair[0] === 'original')
-      return original ? original[1] : imagesList[0][1]
+      // Prefer original if it exists, otherwise use the first available resolution
+      if (original && original[1]) {
+        return original[1]
+      }
+      if (imagesList[0]?.[1]) {
+        return imagesList[0][1]
+      }
     }
-    return loadingImage ? loadingImage : defaultImage
+
+    // Fallback order: loadingImage -> defaultImage -> empty string
+    if (loadingImage) {
+      return loadingImage
+    }
+    return defaultImage || ''
   }
 
   const imagesList = useMemo(
@@ -188,53 +198,55 @@ export default function CustomImage({
 
   const [imageSrc, setImageSrc] = useState(getInitialSrc())
   const [isImageLoaded, setIsImageLoaded] = useState(false)
-  const [isError, setIsError] = useState(false)
 
   /**
    * Transform list of images into string for attribute 'srcset' of <img>.
    * @param {[string, string][]} imagesList - list of images
+   * @param {boolean} shouldFilterWebP - whether to filter out WebP images
    */
-  const transformImagesSrcSet = useCallback((imagesList) => {
-    const imagesToTransform = imagesList.filter(
-      (pair) =>
-        pair[0] !== 'original' && pair[0] !== `original-${FILE_EXTENSION_WEBP}`
-    )
+  const transformImagesSrcSet = useCallback(
+    (imagesList, shouldFilterWebP = false) => {
+      const imagesToTransform = imagesList.filter(
+        (pair) =>
+          pair[0] !== 'original' &&
+          pair[0] !== `original-${FILE_EXTENSION_WEBP}`
+      )
 
-    const widthMap = new Map()
+      const widthMap = new Map()
 
-    imagesToTransform.forEach((pair) => {
-      const widthText = pair[0].replace(`-${FILE_EXTENSION_WEBP}`, '')
-      const width = widthText.match(REGEX)[0]
-      const isWebP = pair[0].endsWith(`-${FILE_EXTENSION_WEBP}`)
+      imagesToTransform.forEach((pair) => {
+        const widthText = pair[0].replace(`-${FILE_EXTENSION_WEBP}`, '')
+        const width = widthText.match(REGEX)[0]
+        const isWebP = pair[0].endsWith(`-${FILE_EXTENSION_WEBP}`)
 
-      if (!widthMap.has(width)) {
-        // If width not recorded yet, add it
-        widthMap.set(width, { url: pair[1], isWebP })
-      } else {
-        // If width exists, check if we should replace it
-        const currentEntry = widthMap.get(width)
-
-        // We always prefer WebP for performance (smaller file size/faster LCP).
-        // Modern browser support for WebP is >97%, so the risk of "broken images" is negligible.
-        if (!currentEntry.isWebP && isWebP) {
-          widthMap.set(width, { url: pair[1], isWebP: true })
+        if (shouldFilterWebP && isWebP) {
+          return
         }
-      }
-    })
 
-    const str = Array.from(widthMap.entries())
-      .map(([width, entry]) => {
-        return `${entry.url} ${width}w`
+        if (!widthMap.has(width)) {
+          // If width not recorded yet, add it
+          widthMap.set(width, { url: pair[1], isWebP })
+        } else {
+          // If width exists, check if we should replace it
+          const currentEntry = widthMap.get(width)
+
+          // We always prefer WebP for performance (smaller file size/faster LCP).
+          // Modern browser support for WebP is >97%, so the risk of "broken images" is negligible.
+          if (!currentEntry.isWebP && isWebP) {
+            widthMap.set(width, { url: pair[1], isWebP: true })
+          }
+        }
       })
-      .join(',')
 
-    return str
-  }, [])
+      const str = Array.from(widthMap.entries())
+        .map(([width, entry]) => {
+          return `${entry.url} ${width}w`
+        })
+        .join(',')
 
-  const imageSrcSet = useMemo(
-    () =>
-      isImageLoaded || isError ? undefined : transformImagesSrcSet(imagesList),
-    [isImageLoaded, isError, transformImagesSrcSet, imagesList]
+      return str
+    },
+    []
   )
 
   /**
@@ -279,11 +291,6 @@ export default function CustomImage({
       return sizesStr
     },
     [printLogInDevMode]
-  )
-
-  const imageSizes = useMemo(
-    () => (isError ? undefined : transformImageSizes(rwd, breakpoint)),
-    [isError, transformImageSizes, rwd, breakpoint]
   )
 
   const getImageStyle = () => {
@@ -464,7 +471,6 @@ export default function CustomImage({
           break
       }
       if (imageRef?.current) {
-        setIsError(true)
         handleImageOnLoaded(defaultImage)
         imageRef?.current.addEventListener('error', () => {
           printLogInDevMode(`${errorMessage.unableLoadDefaultImage}`)
@@ -533,8 +539,6 @@ export default function CustomImage({
       style={imageStyle}
       ref={imageRef}
       src={imageSrc}
-      srcSet={imageSrcSet}
-      sizes={imageSizes}
       alt={alt}
       fetchpriority={priority ? 'high' : fetchPriority}
       loading={priority ? 'eager' : loading} // Native browser attributes for responsive images and performance. 'eager' loading is used for priority images to improve LCP.
