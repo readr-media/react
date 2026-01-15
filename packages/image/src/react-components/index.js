@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react' // eslint-disable-line
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 
 const FILE_EXTENSION_WEBP = 'webP'
 
@@ -12,6 +12,19 @@ const errorMessage = {
   unableGetResolution: 'Unable to get resolution',
   unableLoadImages: 'Unable to load any image',
   unableLoadDefaultImage: 'Unable to load default image',
+}
+
+/**
+ * @param {string} sizes
+ * @param {string} defaultValue
+ * @returns {string}
+ */
+function joinSizesWidthDefaultValue(sizes, defaultValue) {
+  if (/max-width/.test(sizes)) {
+    return [sizes, defaultValue].join(', ')
+  } else {
+    return defaultValue
+  }
 }
 
 /**
@@ -57,11 +70,14 @@ export default function CustomImage({
    * @param {String} message
    * @returns {void}
    */
-  function printLogInDevMode(message) {
-    if (debugMode) {
-      console.log(message)
-    }
-  }
+  const printLogInDevMode = useCallback(
+    (message) => {
+      if (debugMode) {
+        console.log(message)
+      }
+    },
+    [debugMode]
+  )
 
   /**
    * Transform params `images` into an array, which included three step:
@@ -72,7 +88,6 @@ export default function CustomImage({
    *    b. the first child-item does not contain integers.
    *    c. the second child-item (which is the key of certain property in params `images`) is falsy values, e.g. empty string, undefined, null.
    *    As long as one of the conditions is met, will remove item.
-   *    If the first child-item is "original", will not remove no matter what.
    * 3. Sort array by the difference of first child-item. It will check the integer in first child-item, the smaller will be placed forward. If there is no integer in first child-item, it will be placed backward.
    * In the end, if the params `images` is { 1600: '1600.png', original: 'original.png' ,w480: 'w480.png', w800: '', w1200: 'w1200.png' },
    * it will return [ ['w480': 'w480.png'], ['w1200': 'w1200.png'], 'original': 'original.png']
@@ -83,7 +98,7 @@ export default function CustomImage({
     /** @type {[string,string][]} */
     const imagesWithoutEmptyProperty = Object.entries(images)
       .filter(
-        (pair) => (/^w\d+$/.test(pair[0]) && pair[1]) || pair[0] === 'original'
+        (pair) => pair[1] && (/^w\d+$/.test(pair[0]) || pair[0] === 'original')
       )
       .map(([key, value]) => [key, encodeURI(value)])
     const sortedImagesList = imagesWithoutEmptyProperty.sort((pairA, pairB) => {
@@ -167,114 +182,116 @@ export default function CustomImage({
    * This ensures:
    * 1. LCP optimization for Hero Images (where loadingImage is intentionally removed).
    * 2. Backward compatibility for other components (like TopicList) that rely on loadingImage spinner.
+   * 3. Always select a non-empty URL to prevent src="" rendering.
    */
   function getInitialSrc() {
     if (priority && imagesList.length > 0) {
-      // Find original or the first available image
       const original = imagesList.find((pair) => pair[0] === 'original')
-      return original ? original[1] : imagesList[0][1]
+      // Prefer original if it exists, otherwise use the first available resolution
+      if (original && original[1]) {
+        return original[1]
+      }
+      if (imagesList[0]?.[1]) {
+        return imagesList[0][1]
+      }
     }
-    return loadingImage ? loadingImage : defaultImage
+
+    // Fallback order: loadingImage -> defaultImage -> empty string
+    if (loadingImage) {
+      return loadingImage
+    }
+    return defaultImage || ''
   }
 
-  const imagesList = getImagesList(images, imagesWebP)
+  const imagesList = useMemo(
+    () => getImagesList(images, imagesWebP),
+    [images, imagesWebP]
+  )
   const imageRef = useRef(null)
 
   const [imageSrc, setImageSrc] = useState(getInitialSrc())
   const [isImageLoaded, setIsImageLoaded] = useState(false)
-  const [isError, setIsError] = useState(false)
 
   /**
    * Transform list of images into string for attribute 'srcset' of <img>.
    * @param {[string, string][]} imagesList - list of images
+   * @param {boolean} shouldFilterWebP - whether to filter out WebP images
    */
-  function transformImagesSrcSet(imagesList) {
-    const imagesToTransform = imagesList.filter(
-      (pair) =>
-        pair[0] !== 'original' && pair[0] !== `original-${FILE_EXTENSION_WEBP}`
-    )
-
-    const widthMap = new Map()
-
-    imagesToTransform.forEach((pair) => {
-      const widthText = pair[0].replace(`-${FILE_EXTENSION_WEBP}`, '')
-      const width = widthText.match(REGEX)[0]
-      const isWebP = pair[0].endsWith(`-${FILE_EXTENSION_WEBP}`)
-
-      if (!widthMap.has(width)) {
-        // If width not recorded yet, add it
-        widthMap.set(width, { url: pair[1], isWebP })
-      } else {
-        // If width exists, check if we should replace it
-        const currentEntry = widthMap.get(width)
-
-        // We always prefer WebP for performance (smaller file size/faster LCP).
-        // Modern browser support for WebP is >97%, so the risk of "broken images" is negligible.
-        if (!currentEntry.isWebP && isWebP) {
-          widthMap.set(width, { url: pair[1], isWebP: true })
-        }
-      }
-    })
-
-    const str = Array.from(widthMap.entries())
-      .map(([width, entry]) => {
-        return `${entry.url} ${width}w`
-      })
-      .join(',')
-
-    return str
-  }
-
-  const imageSrcSet =
-    isImageLoaded || isError ? undefined : transformImagesSrcSet(imagesList)
-
-  /**
-   * @param {string} sizes
-   * @param {string} defaultValue
-   * @returns {string}
-   */
-  function joinSizesWidthDefaultValue(sizes, defaultValue) {
-    if (/max-width/.test(sizes)) {
-      return [sizes, defaultValue].join(', ')
-    } else {
-      return defaultValue
-    }
-  }
-
-  /**
-   * @param {Object} rwd
-   * @param {Object} breakpoint
-   * @returns {string}
-   */
-  function transformImageSizes(rwd, breakpoint) {
-    const defaultValue = '100vw'
-    let sizesStr
-
-    if (rwd && Object.entries(rwd).length) {
-      const obj = {}
-
-      Object.keys(rwd).forEach((key) => {
-        if (breakpoint[key]) {
-          obj[breakpoint[key]] = rwd[key]
-        }
-      })
-      const sizes = Object.entries(obj)
-        .map((pair) => `(max-width: ${pair[0]}) ${pair[1]}`)
-        .join(', ')
-
-      sizesStr = joinSizesWidthDefaultValue(
-        sizes,
-        rwd.default ? rwd.default : defaultValue
+  const transformImagesSrcSet = useCallback(
+    (imagesList, shouldFilterWebP = false) => {
+      const imagesToTransform = imagesList.filter(
+        (pair) =>
+          pair[0] !== 'original' &&
+          pair[0] !== `original-${FILE_EXTENSION_WEBP}`
       )
-    } else {
-      sizesStr = defaultValue
-    }
 
-    printLogInDevMode(`Generated \`sizes\` info is \`${sizesStr}\``)
-    return sizesStr
-  }
+      const widthMap = new Map()
 
-  const imageSizes = isError ? undefined : transformImageSizes(rwd, breakpoint)
+      imagesToTransform.forEach((pair) => {
+        const widthText = pair[0].replace(`-${FILE_EXTENSION_WEBP}`, '')
+        const width = widthText.match(REGEX)[0]
+        const isWebP = pair[0].endsWith(`-${FILE_EXTENSION_WEBP}`)
+
+        if (shouldFilterWebP && isWebP) {
+          return
+        }
+
+        if (!widthMap.has(width)) {
+          // If width not recorded yet, add it
+          widthMap.set(width, { url: pair[1], isWebP })
+        } else {
+          // If width exists, check if we should replace it
+          const currentEntry = widthMap.get(width)
+
+          // We always prefer WebP for performance (smaller file size/faster LCP).
+          // Modern browser support for WebP is >97%, so the risk of "broken images" is negligible.
+          if (!currentEntry.isWebP && isWebP) {
+            widthMap.set(width, { url: pair[1], isWebP: true })
+          }
+        }
+      })
+
+      const str = Array.from(widthMap.entries())
+        .map(([width, entry]) => {
+          return `${entry.url} ${width}w`
+        })
+        .join(',')
+
+      return str
+    },
+    []
+  )
+
+  const transformImageSizes = useCallback(
+    (rwd, breakpoint) => {
+      const defaultValue = '100vw'
+      let sizesStr
+
+      if (rwd && Object.entries(rwd).length) {
+        const obj = {}
+
+        Object.keys(rwd).forEach((key) => {
+          if (breakpoint[key]) {
+            obj[breakpoint[key]] = rwd[key]
+          }
+        })
+        const sizes = Object.entries(obj)
+          .map((pair) => `(max-width: ${pair[0]}) ${pair[1]}`)
+          .join(', ')
+
+        sizesStr = joinSizesWidthDefaultValue(
+          sizes,
+          rwd.default ? rwd.default : defaultValue
+        )
+      } else {
+        sizesStr = defaultValue
+      }
+
+      printLogInDevMode(`Generated \`sizes\` info is \`${sizesStr}\``)
+      return sizesStr
+    },
+    [printLogInDevMode]
+  )
 
   const getImageStyle = () => {
     return {
@@ -303,86 +320,92 @@ export default function CustomImage({
    * @param {[string, string][]} imagesList - The URL of the images to load
    * @returns {Promise<string>} - the resolution of image should be loaded
    */
-  const getResolution = (imagesList) => {
-    const imageSrcSet = transformImagesSrcSet(imagesList)
-    const sizes = transformImageSizes(rwd, breakpoint)
+  const getResolution = useCallback(
+    (imagesList) => {
+      const imageSrcSet = transformImagesSrcSet(imagesList)
+      const sizes = transformImageSizes(rwd, breakpoint)
 
-    const originalWebPSrc = imagesList.find(
-      (pair) => pair[0] === `original-${FILE_EXTENSION_WEBP}`
-    )?.[1]
-    const originalSrc = imagesList.find((pair) => pair[0] === 'original')?.[1]
+      const originalWebPSrc = imagesList.find(
+        (pair) => pair[0] === `original-${FILE_EXTENSION_WEBP}`
+      )?.[1]
+      const originalSrc = imagesList.find((pair) => pair[0] === 'original')?.[1]
 
-    return new Promise((resolve, reject) => {
-      if (imageSrcSet) {
-        const img = new Image()
-        /**
-         * @param {Event & { target: HTMLImageElement }}
-         */
-        const eventHandler = (event) => {
-          const eventType = event.type
-          const imageSrc = event.target?.currentSrc
-          const index = imagesList.findIndex((p) => p[1] === imageSrc)
-          if (index === -1) {
-            reject()
-          } else if (index < imagesList.length - 1) {
-            switch (eventType) {
-              case 'load':
-                resolve(imagesList[index][0])
-                break
-              case 'error':
-                // Instead of resolving next, we try to see if any resolution works
-                // But for getResolution, we just want to know what the browser picks.
-                // If it fails, we let loadImages handle the sequential fallback.
-                resolve(imagesList[index][0])
-                break
+      return new Promise((resolve, reject) => {
+        if (imageSrcSet) {
+          const img = new Image()
+          /**
+           * @param {Event & { target: HTMLImageElement }}
+           */
+          const eventHandler = (event) => {
+            const eventType = event.type
+            const imageSrc = event.target?.currentSrc
+            const index = imagesList.findIndex((p) => p[1] === imageSrc)
+            if (index === -1) {
+              reject()
+            } else if (index < imagesList.length - 1) {
+              switch (eventType) {
+                case 'load':
+                  resolve(imagesList[index][0])
+                  break
+                case 'error':
+                  // Instead of resolving next, we try to see if any resolution works
+                  // But for getResolution, we just want to know what the browser picks.
+                  // If it fails, we let loadImages handle the sequential fallback.
+                  resolve(imagesList[index][0])
+                  break
+              }
+            } else {
+              resolve(imagesList[imagesList.length - 1][0])
             }
-          } else {
-            resolve(imagesList[imagesList.length - 1][0])
+
+            img.removeEventListener('load', eventHandler)
+            img.removeEventListener('error', eventHandler)
           }
 
-          img.removeEventListener('load', eventHandler)
-          img.removeEventListener('error', eventHandler)
+          img.addEventListener('load', eventHandler)
+          img.addEventListener('error', eventHandler)
+          img.sizes = sizes
+          img.srcset = imageSrcSet
+        } else if (originalWebPSrc) {
+          resolve(`original-${FILE_EXTENSION_WEBP}`)
+        } else if (originalSrc) {
+          resolve('original')
+        } else {
+          const err = new Error(errorMessage.unableGetResolution)
+          reject(err)
         }
-
-        img.addEventListener('load', eventHandler)
-        img.addEventListener('error', eventHandler)
-        img.sizes = sizes
-        img.srcset = imageSrcSet
-      } else if (originalWebPSrc) {
-        resolve(`original-${FILE_EXTENSION_WEBP}`)
-      } else if (originalSrc) {
-        resolve('original')
-      } else {
-        const err = new Error(errorMessage.unableGetResolution)
-        reject(err)
-      }
-    })
-  }
+      })
+    },
+    [rwd, breakpoint, transformImagesSrcSet, transformImageSizes]
+  )
 
   /**
    * Load an image and return the URL of image
    * @param {String} url - The URL of the image to load
    * @returns {Promise<String>} - The URL of the image
    */
-  const loadImage = (url) => {
-    return new Promise((resolve, reject) => {
-      const img = new Image()
+  const loadImage = useCallback(
+    (url) => {
+      return new Promise((resolve, reject) => {
+        const img = new Image()
 
-      const loadHandler = () => {
-        resolve(url)
-        img.removeEventListener('load', loadHandler)
-      }
-      const errorHandler = () => {
-        printLogInDevMode(`Failed to load image: ${url}`)
-        reject()
-        img.removeEventListener('error', errorHandler)
-      }
+        const loadHandler = () => {
+          resolve(url)
+          img.removeEventListener('load', loadHandler)
+        }
+        const errorHandler = () => {
+          printLogInDevMode(`Failed to load image: ${url}`)
+          reject()
+          img.removeEventListener('error', errorHandler)
+        }
 
-      img.addEventListener('load', loadHandler)
-      img.addEventListener('error', errorHandler)
-      img.src = url
-    })
-  }
+        img.addEventListener('load', loadHandler)
+        img.addEventListener('error', errorHandler)
+        img.src = url
+      })
+    },
+    [printLogInDevMode]
+  )
 
   /**
    * Loads a list of images in sequence, it will start loading on certain resolution.
@@ -393,34 +416,36 @@ export default function CustomImage({
    * @returns {Promise<string>} - The URL of the image should loaded
    * @throws {Error<string>}
    */
-  const loadImages = (resolution, imagesList) => {
-    const index = imagesList.findIndex((pair) => pair[0] === resolution)
-    const loadList = imagesList.slice(index)
-    return loadList.reduce((prevPromise, pair) => {
-      return prevPromise.catch(() => {
-        const isLastImageUrl = pair[1] === loadList[loadList.length - 1][1]
+  const loadImages = useCallback(
+    (resolution, imagesList) => {
+      const index = imagesList.findIndex((pair) => pair[0] === resolution)
+      const loadList = imagesList.slice(index)
+      return loadList.reduce((prevPromise, pair) => {
+        return prevPromise.catch(() => {
+          const isLastImageUrl = pair[1] === loadList[loadList.length - 1][1]
 
-        if (isLastImageUrl) {
-          return loadImage(pair[1]).catch(() => {
-            throw new Error(errorMessage.unableLoadImages)
-          })
-        }
-        return loadImage(pair[1])
-      })
-    }, Promise.reject())
-  }
+          if (isLastImageUrl) {
+            return loadImage(pair[1]).catch(() => {
+              throw new Error(errorMessage.unableLoadImages)
+            })
+          }
+          return loadImage(pair[1])
+        })
+      }, Promise.reject())
+    },
+    [loadImage]
+  )
   /**
    *
    * @param {string} url
    */
-  const handleImageOnLoaded = (url) => {
+  const handleImageOnLoaded = useCallback((url) => {
     setImageSrc(url)
     setIsImageLoaded(true)
-  }
+  }, [])
 
-  const loadImageProgress = async () => {
+  const loadImageProgress = useCallback(async () => {
     try {
-      const imagesList = getImagesList(images, imagesWebP)
       if (imagesList.length === 0) {
         throw new Error(errorMessage.noImageProvided)
       }
@@ -452,23 +477,32 @@ export default function CustomImage({
           break
       }
       if (imageRef?.current) {
-        setIsError(true)
         handleImageOnLoaded(defaultImage)
         imageRef?.current.addEventListener('error', () => {
           printLogInDevMode(`${errorMessage.unableLoadDefaultImage}`)
         })
       }
     }
-  }
+  }, [
+    imagesList,
+    getResolution,
+    loadImages,
+    handleImageOnLoaded,
+    printLogInDevMode,
+    defaultImage,
+  ])
 
-  const callback = (entries, observer) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        loadImageProgress()
-        observer.unobserve(entry.target)
-      }
-    })
-  }
+  const callback = useCallback(
+    (entries, observer) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          loadImageProgress()
+          observer.unobserve(entry.target)
+        }
+      })
+    },
+    [loadImageProgress]
+  )
 
   useEffect(() => {
     if (isImageLoaded) {
@@ -497,10 +531,11 @@ export default function CustomImage({
       console.error(`Unhandled error happened, hide image element', ${err}`)
     }
   }, [
-    defaultImage,
-    printLogInDevMode,
+    priority,
+    callback,
     intersectionObserverOptions,
     isImageLoaded,
+    loadImageProgress,
   ])
 
   return (
@@ -510,10 +545,8 @@ export default function CustomImage({
       style={imageStyle}
       ref={imageRef}
       src={imageSrc}
-      srcSet={imageSrcSet}
-      sizes={imageSizes}
       alt={alt}
-      fetchpriority={priority ? 'high' : fetchPriority}
+      fetchpriority={priority ? 'high' : fetchPriority} // React 18.2.0 requires the lowercase fetchpriority attribute; using fetchPriority may not be forwarded correctly and can cause warnings or errors.
       loading={priority ? 'eager' : loading} // Native browser attributes for responsive images and performance. 'eager' loading is used for priority images to improve LCP.
     ></img>
   )
