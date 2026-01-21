@@ -203,10 +203,18 @@ export default function CustomImage({
     return defaultImage || ''
   }
 
-  const imagesList = useMemo(
-    () => getImagesList(images, imagesWebP),
-    [images, imagesWebP]
-  )
+  const imagesList = useMemo(() => {
+    try {
+      return getImagesList(images, imagesWebP)
+    } catch (err) {
+      // Prevent SSR crash when images prop is null/invalid
+      // Return empty array to trigger fallback to defaultImage
+      if (debugMode) {
+        console.error('[react-image] Failed to get images list:', err)
+      }
+      return []
+    }
+  }, [images, imagesWebP, debugMode])
   const imageRef = useRef(null)
 
   const [imageSrc, setImageSrc] = useState(getInitialSrc())
